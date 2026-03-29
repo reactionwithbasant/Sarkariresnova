@@ -19,7 +19,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         run: node scripts/generator.js
-      - name: Push Changes
+      - name: Save Results
         run: |
           git config --global user.name "Sarkari Bot"
           git config --global user.email "bot@sarkariresnova.com"
