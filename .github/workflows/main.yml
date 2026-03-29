@@ -1,28 +1,28 @@
 name: SarkariResNova Auto Engine
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 * * * *'
-  workflow_dispatch:
 jobs:
-  run-engine:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node 22
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Libraries
+      - name: Install Dependencies
         run: npm install axios rss-parser
-      - name: Start AI Generator
+      - name: Run AI Engine
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         run: node scripts/generator.js
-      - name: Save to GitHub
+      - name: Commit & Push Changes
         run: |
           git config --global user.name "Sarkari Bot"
           git config --global user.email "bot@sarkariresnova.com"
           git add .
-          git commit -m "Auto Update Jobs" || echo "No changes"
+          git commit -m "Auto Update: New Jobs Found" || echo "No new jobs"
           git push
