@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "affiearn-ad591"
+  },
+  "targets": {
+    "affiearn-ad591": {
+      "hosting": {
+        "jobnova": [
+          "jobnova-news"
+        ],
+        "sarkariresnova": [
+          "sarkariresnova"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
