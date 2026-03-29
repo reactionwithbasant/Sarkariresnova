@@ -24,5 +24,5 @@ jobs:
           git config --global user.name "Sarkari Bot"
           git config --global user.email "bot@sarkariresnova.com"
           git add index.html
-          git commit -m "Auto-update: AdSense Content" || echo "No changes"
+          git commit -m "Victory Fix: Permission Granted" || echo "No changes"
           git push
