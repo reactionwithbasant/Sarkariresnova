@@ -4,22 +4,22 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch:
 jobs:
-  build:
+  run-engine:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node
+      - name: Setup Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Dependencies
+      - name: Install Libraries
         run: npm install axios rss-parser
-      - name: Run Generator
+      - name: Start AI Generator
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         run: node scripts/generator.js
-      - name: Save Results
+      - name: Save to GitHub
         run: |
           git config --global user.name "Sarkari Bot"
           git config --global user.email "bot@sarkariresnova.com"
