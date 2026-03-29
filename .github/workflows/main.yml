@@ -7,11 +7,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Install Dependencies
         run: npm install axios rss-parser
       - name: Run Generator
@@ -19,7 +19,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         run: node scripts/generator.js
-      - name: Save Data
+      - name: Save Results
         run: |
           git config --global user.name "Sarkari Bot"
           git config --global user.email "bot@sarkariresnova.com"
