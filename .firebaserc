@@ -1,0 +1,13 @@
+{
+  "projects": {},
+  "targets": {
+    "affiearn-ad591": {
+      "hosting": {
+        "sarkariresnova-site": [
+          "sarkariresnova-a18dc"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
