@@ -2,27 +2,26 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const axios = require('axios');
 
 async function start() {
-    // GitHub Secrets se Nayi Key lega
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    
-    // 2026 Latest Stable Model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const token = process.env.TELEGRAM_TOKEN;
+    const geminiKey = process.env.GEMINI_API_KEY;
 
     try {
-        console.log("🚀 Engine Starting with New API Key...");
-        const result = await model.generateContent("Write 2 lines in Hindi: SSC CGL 2026 Notification. Visit sarkariresnova.in");
+        console.log("🚀 RAGHVITA ENTERPRISES: Engine Starting...");
+        const genAI = new GoogleGenerativeAI(geminiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const result = await model.generateContent("SSC CGL 2026 update 2 lines in Hindi. Visit sarkariresnova.in");
         const aiText = result.response.text();
 
-        // Telegram Send
-        const teleUrl = "https://api.telegram.org/bot" + process.env.TELEGRAM_TOKEN + "/sendMessage";
+        const teleUrl = "https://api.telegram.org/bot" + token + "/sendMessage";
         await axios.post(teleUrl, { 
             chat_id: '@sarkariresnovaofficial', 
-            text: "<b>🔔 SARKARI ALERT (New Key)</b>\n\n" + aiText, 
+            text: "<b>🔔 JOB ALERT</b>\n\n" + aiText, 
             parse_mode: 'HTML' 
         });
-        console.log("✅ SUCCESS: Telegram Message Sent!");
+        console.log("✅ SUCCESS: Telegram Sent!");
     } catch (e) {
-        console.log("❌ Error Detail: " + e.message);
+        console.log("❌ Error: " + e.message);
     }
 }
 start();
