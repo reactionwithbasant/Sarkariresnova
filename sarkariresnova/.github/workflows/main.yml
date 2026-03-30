@@ -1,33 +1,19 @@
-name: SarkariResNova Auto Engine
+name: SarkariResNova Final Engine
 on:
-  schedule:
-    - cron: '0 * * * *' # Every hour
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 jobs:
-  build-and-deploy:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - run: npm install
-      - name: Run Generator
+          node-version: '22'
+      - name: Install axios
+        run: npm install axios
+      - name: Run AI Generator
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
-          ONESIGNAL_REST_KEY: ${{ secrets.ONESIGNAL_REST_KEY }}
-          SITE_URL: "https://sarkariresnova-a18dc.web.app"
         run: node scripts/generator.js
-      - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          target: sarkariresnova
-          channelId: live
-
