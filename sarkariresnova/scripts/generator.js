@@ -4,25 +4,27 @@ async function start() {
     const geminiKey = process.env.GEMINI_API_KEY;
     const chat_id = '@sarkariresnovaofficial';
 
-    console.log("🚀 RAGHVITA ENTERPRISES Engine: Connecting...");
+    console.log("🚀 RAGHVITA ENTERPRISES: Connecting to Stable AI...");
+
+    // STABLE 2026 URL (Fixed 404 issue)
+    const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + geminiKey;
 
     try {
-        // AI Content Generation
-        const aiRes = await axios.post("https://generativelanguage.googleapis.com/v1/models/gemini-1.6-flash:generateContent?key=" + geminiKey, {
-            contents: [{ parts: [{ text: "Write 2 lines in Hindi: SSC CGL 2026 Notification. Visit sarkariresnova.in" }] }]
+        const response = await axios.post(url, {
+            contents: [{ parts: [{ text: "Write 2 lines in Hindi: SSC CGL 2026 Notification Out. Visit sarkariresnova.in" }] }]
         });
-        const aiText = aiRes.data.candidates[0].content.parts[0].text;
-
-        // Telegram Send
+        
+        const aiText = response.data.candidates[0].content.parts[0].text;
         const teleUrl = "https://api.telegram.org/bot" + token + "/sendMessage";
+        
         await axios.post(teleUrl, { 
             chat_id: chat_id, 
-            text: "<b>📢 SARKARI JOB ALERT</b>\n\n" + aiText, 
+            text: "<b>📢 JOB UPDATE</b>\n\n" + aiText, 
             parse_mode: 'HTML' 
         });
-        console.log("✅ VICTORY: Message Sent!");
+        console.log("✅ SUCCESS: 404 Fixed & Message Sent!");
     } catch (e) {
-        console.log("❌ ERROR: " + (e.response ? JSON.stringify(e.response.data) : e.message));
+        console.log("❌ Error Details: " + (e.response ? JSON.stringify(e.response.data) : e.message));
     }
 }
 start();
