@@ -1,24 +1,28 @@
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const axios = require('axios');
+
 async function start() {
-    const token = process.env.TELEGRAM_TOKEN;
-    const geminiKey = process.env.GEMINI_API_KEY;
-    const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + geminiKey;
+    // GitHub Secrets se Nayi Key lega
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    
+    // 2026 Latest Stable Model
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     try {
-        // 1. AI Se Post Likhwana
-        const res = await axios.post(url, {
-            contents: [{ parts: [{ text: "Create a recruitment alert in 2 lines for SSC/Banking. Mention 'Apply at sarkariresnova.in'" }] }]
-        });
-        const postContent = res.data.candidates[0].content.parts[0].text;
+        console.log("🚀 Engine Starting with New API Key...");
+        const result = await model.generateContent("Write 2 lines in Hindi: SSC CGL 2026 Notification. Visit sarkariresnova.in");
+        const aiText = result.response.text();
 
-        // 2. Telegram par Link bhejna
-        const teleUrl = "https://api.telegram.org/bot" + token + "/sendMessage";
+        // Telegram Send
+        const teleUrl = "https://api.telegram.org/bot" + process.env.TELEGRAM_TOKEN + "/sendMessage";
         await axios.post(teleUrl, { 
             chat_id: '@sarkariresnovaofficial', 
-            text: "<b>🔥 New Update On Portal</b>\n\n" + postContent + "\n\n🔗 Website: https://sarkariresnova.in", 
+            text: "<b>🔔 SARKARI ALERT (New Key)</b>\n\n" + aiText, 
             parse_mode: 'HTML' 
         });
-        console.log("✅ Website Updated & Telegram Sent!");
-    } catch (e) { console.log("Error: " + e.message); }
+        console.log("✅ SUCCESS: Telegram Message Sent!");
+    } catch (e) {
+        console.log("❌ Error Detail: " + e.message);
+    }
 }
 start();
