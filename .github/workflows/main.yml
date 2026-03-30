@@ -10,7 +10,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install axios
+      - name: Install Dependencies
+        run: npm install @google/generative-ai axios
       - name: Run Engine
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
