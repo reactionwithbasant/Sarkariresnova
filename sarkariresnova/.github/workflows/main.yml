@@ -1,6 +1,10 @@
 name: SarkariResNova Final Engine
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+permissions:
+  contents: write
 jobs:
   run-bot:
     runs-on: ubuntu-latest
