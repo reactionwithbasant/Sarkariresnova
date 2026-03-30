@@ -2,37 +2,31 @@ const axios = require('axios');
 async function start() {
     const token = process.env.TELEGRAM_TOKEN;
     const geminiKey = process.env.GEMINI_API_KEY;
-    
-    console.log("🚀 RAGHVITA ENTERPRISES: Connecting to 2026 Stable AI...");
+    const chat_id = '@sarkariresnovaofficial';
 
-    // 2026 Latest Stable API Endpoint
-    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + geminiKey;
+    console.log("🚀 FINAL ATTEMPT: Connecting to Google v1 Stable...");
+
+    // 2026 OFFICIAL STABLE URL
+    const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + geminiKey;
 
     try {
         const response = await axios.post(url, {
-            contents: [{ 
-                parts: [{ text: "Write 2 lines in Hindi: SSC CGL 2026 Notification Out. Visit sarkariresnova.in" }] 
-            }]
-        }, {
-            headers: { 'Content-Type': 'application/json' }
+            contents: [{ parts: [{ text: "Write 1 line in Hindi: SSC CGL 2026 Update. Visit sarkariresnova.in" }] }]
         });
         
         const aiText = response.data.candidates[0].content.parts[0].text;
         const teleUrl = "https://api.telegram.org/bot" + token + "/sendMessage";
         
         await axios.post(teleUrl, { 
-            chat_id: '@sarkariresnovaofficial', 
-            text: "<b>📢 JOB ALERT</b>\n\n" + aiText, 
+            chat_id: chat_id, 
+            text: "<b>📢 UPDATE</b>\n\n" + aiText, 
             parse_mode: 'HTML' 
         });
-        console.log("✅ SUCCESS: 404 FIXED!");
+        console.log("✅ SUCCESS: Telegram Sent!");
     } catch (e) {
-        // Detailed Logging to find the exact issue
-        if (e.response && e.response.status === 404) {
-            console.log("❌ 404 ERROR: Model not found or API Key issue.");
-        } else {
-            console.log("❌ Error: " + (e.response ? JSON.stringify(e.response.data) : e.message));
-        }
+        // Agar ab bhi 404 aata hai, toh hum details print karenge
+        console.log("❌ ERROR STATUS: " + (e.response ? e.response.status : "No Response"));
+        console.log("❌ MSG: " + (e.response ? JSON.stringify(e.response.data) : e.message));
     }
 }
 start();
