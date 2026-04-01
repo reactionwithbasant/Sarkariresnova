@@ -7,7 +7,7 @@ async function start() {
     const teleToken = process.env.TELEGRAM_TOKEN;
 
     try {
-        console.log("🚀 RAGHVITA ENGINE: Finding REAL Apply Links...");
+        console.log("🚀 RAGHVITA ENGINE: Fixing Official Link Errors...");
         
         const listRes = await axios.get(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
         const selectedModel = listRes.data.models.find(m => m.name.includes('gemini-2.5-flash'))?.name || "models/gemini-1.5-flash";
@@ -15,28 +15,28 @@ async function start() {
         const cats = ["Latest Job", "Admit Card", "Result", "Govt Scheme", "Syllabus"];
         const randomCat = cats[Math.floor(Math.random() * cats.length)];
 
-        // AI ko sakht instruction: Asli link dhoondho, man-ghadant nahi
-        const prompt = `Act as a Sarkari Exam Expert. Research and write a 500-word Hindi post for ONE SPECIFIC ${randomCat} of 2026.
-        IMPORTANT: Find the REAL OFFICIAL registration or login URL for this post. 
-        Format: 
-        [TITLE] Specific Name
-        [SLUG] short-slug
-        [META] Description
-        [CONTENT] Intro, Dates Table, Fees, Eligibility, How to Apply, FAQ.
-        [APPLY_LINK] Put the ACTUAL OFFICIAL URL (e.g., https://ssc.nic.in or https://uppbpb.gov.in). Do not make up a fake link.`;
+        const prompt = `Act as a Sarkari Exam Expert. Write a 500-word Hindi post for ONE SPECIFIC ${randomCat} 2026.
+        [TITLE] Exact Name of Post
+        [SLUG] unique-slug
+        [META] SEO Description
+        [CONTENT] Detailed Info with Tables, Eligibility, Steps, FAQ.
+        [OFFICIAL_SITE] provide the main official domain (e.g., ssc.gov.in or uppbpb.gov.in)`;
 
         const genRes = await axios.post(`https://generativelanguage.googleapis.com/v1beta/${selectedModel}:generateContent?key=${apiKey}`, {
             contents: [{ parts: [{ text: prompt }] }]
         });
 
         const rawText = genRes.data.candidates[0].content.parts[0].text;
-        const title = (rawText.match(/\[TITLE\]\s*(.*)/i) || [])[1] || "New Update";
+        const title = (rawText.match(/\[TITLE\]\s*(.*)/i) || [])[1] || "Sarkari Update";
         let slug = (rawText.match(/\[SLUG\]\s*([a-zA-Z0-9-]*)/i) || [])[1] || "update-" + Date.now();
-        const content = (rawText.match(/\[CONTENT\]\s*([\s\S]*)/i) || [])[1] || "Loading...";
+        const content = (rawText.match(/\[CONTENT\]\s*([\s\S]*)/i) || [])[1] || "Details loading...";
         
-        // Link cleaner logic
-        let rawLink = (rawText.match(/\[APPLY_LINK\]\s*(https?:\/\/[^\s*]+)/i) || [])[1] || "https://www.google.com/search?q=official+apply+link";
-        const applyLink = rawLink.trim();
+        // --- SMART LINK LOGIC ---
+        let officialSite = (rawText.match(/\[OFFICIAL_SITE\]\s*(https?:\/\/[^\s*]+)/i) || [])[1] || "https://www.google.com";
+        officialSite = officialSite.trim().replace(/[*]/g, '');
+        
+        // Direct link to the department's search or portal to avoid 404/Error pages
+        const applyLink = officialSite; 
 
         slug = slug.substring(0, 45).toLowerCase();
         const liveUrl = `${config.SITE_URL}/${slug}.html`;
@@ -50,25 +50,22 @@ async function start() {
                 <p class="text-[10px] uppercase">${config.COMPANY}</p>
             </header>
             <main class="max-w-4xl mx-auto bg-white p-6 mt-4 shadow-2xl border-t-8 border-red-600">
-                <div class="mb-4"><span class="bg-red-600 text-white px-3 py-1 rounded font-bold text-xs uppercase">${randomCat}</span></div>
-                <h2 class="text-3xl font-extrabold text-blue-900 mb-6">${title}</h2>
+                <span class="bg-red-600 text-white px-3 py-1 rounded font-bold text-xs uppercase">${randomCat}</span>
+                <h2 class="text-3xl font-extrabold text-blue-900 my-4">${title}</h2>
                 <div class="prose max-w-none text-gray-800 mb-8">${content}</div>
                 <div class="mt-10 p-6 bg-yellow-50 border-2 border-yellow-200 rounded-xl text-center">
-                    <h3 class="font-bold text-xl text-blue-900 mb-4 italic underline">महत्वपूर्ण लिंक (Important Links)</h3>
-                    <a href="${applyLink}" target="_blank" rel="noopener noreferrer" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center p-5 rounded-lg font-bold text-2xl shadow-2xl transition-all scale-105">👉 CLICK HERE TO APPLY ONLINE (REAL LINK)</a>
-                    <p class="mt-4 text-xs text-gray-500">Note: Ye link aapko seedha vibhag ki official website par le jayega.</p>
-                </div>
-                <div class="mt-6">
-                    <a href="https://t.me/sarkariresnovaofficial" class="block bg-blue-700 text-white text-center p-3 rounded-lg font-bold shadow-md hover:bg-blue-800">Join Our Telegram (Sabse Tez Update)</a>
+                    <h3 class="font-bold text-xl text-blue-900 mb-4">महत्वपूर्ण लिंक (Important Links)</h3>
+                    <a href="${applyLink}" target="_blank" rel="noopener noreferrer" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center p-5 rounded-lg font-bold text-2xl shadow-2xl transition-all">👉 CLICK HERE FOR OFFICIAL WEBSITE / APPLY</a>
+                    <p class="mt-4 text-xs text-gray-600 italic">Sarkari Advice: Official website par jaakar Latest News section check karein.</p>
                 </div>
             </main>
-            <footer class="mt-10 p-6 bg-gray-800 text-white text-center text-xs">© 2026 ${config.COMPANY} | Honesty & Hard Work</footer>
+            <footer class="mt-10 p-6 bg-gray-800 text-white text-center text-xs">© 2026 ${config.COMPANY} | Owner: ${config.OWNER}</footer>
         </body></html>`;
 
         if (!fs.existsSync('public')) fs.mkdirSync('public');
         fs.writeFileSync("public/" + slug + ".html", html);
 
-        // Homepage update (Index.html) - NO CHANGES TO PREVIOUS LOGIC
+        // Pre-existing Logic: Index and Telegram (SAFE)
         const indexPath = "public/index.html";
         const newEntry = `<li><a href="${slug}.html" class="text-blue-700 font-medium">[${randomCat}] ${title}</a></li>`;
         if (fs.existsSync(indexPath)) {
@@ -78,11 +75,11 @@ async function start() {
 
         await axios.post(`https://api.telegram.org/bot${teleToken}/sendMessage`, {
             chat_id: config.TELEGRAM_CHANNEL,
-            text: `<b>🚀 [${randomCat}] ${title}</b>\n\n🔗 <b>Check Real Apply Link:</b>\n${liveUrl}`,
+            text: `<b>🚀 [${randomCat}] ${title}</b>\n\n🔗 <b>Live Link:</b>\n${liveUrl}`,
             parse_mode: 'HTML'
         });
 
-        console.log("✅ Success! Real Link Extracted: " + applyLink);
+        console.log("✅ Fixed: Link pointed to Main Official Domain.");
     } catch (e) { console.log("❌ Error: " + e.message); }
 }
 start();
