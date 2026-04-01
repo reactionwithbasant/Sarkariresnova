@@ -10,10 +10,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Dependencies
-        run: npm install @google/generative-ai axios
-      - name: Run Engine
+      - run: npm install axios
+      - name: Run Engine & Deploy
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        run: node scripts/generator.js
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          node scripts/generator.js
+          git config --global user.name "Basant Kumar"
+          git config --global user.email "raghvitaenterprises@gmail.com"
+          git add .
+          git commit -m "Auto-post: New Article Created" || echo "No changes"
+          git push origin main
+          npx firebase-tools deploy --only hosting:sarkariresnova-site --token "$FIREBASE_TOKEN" --project affiearn-ad591
