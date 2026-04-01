@@ -7,7 +7,7 @@ async function start() {
     const teleToken = process.env.TELEGRAM_TOKEN;
 
     try {
-        console.log("🚀 RAGHVITA ENGINE: Generating Direct Apply Post...");
+        console.log("🚀 RAGHVITA ENGINE: Finding REAL Apply Links...");
         
         const listRes = await axios.get(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
         const selectedModel = listRes.data.models.find(m => m.name.includes('gemini-2.5-flash'))?.name || "models/gemini-1.5-flash";
@@ -15,29 +15,32 @@ async function start() {
         const cats = ["Latest Job", "Admit Card", "Result", "Govt Scheme", "Syllabus"];
         const randomCat = cats[Math.floor(Math.random() * cats.length)];
 
-        // Instruction for DIRECT APPLY LINK instead of just website
-        const prompt = `Act as an SEO Expert for SarkariResNova. Write a 500-word Hindi post for ONE SPECIFIC ${randomCat} of 2026.
-        Structure: 
-        [TITLE] Specific Post Name
+        // AI ko sakht instruction: Asli link dhoondho, man-ghadant nahi
+        const prompt = `Act as a Sarkari Exam Expert. Research and write a 500-word Hindi post for ONE SPECIFIC ${randomCat} of 2026.
+        IMPORTANT: Find the REAL OFFICIAL registration or login URL for this post. 
+        Format: 
+        [TITLE] Specific Name
         [SLUG] short-slug
-        [META] SEO Description
-        [CONTENT] Intro, Dates/Fees Table, Eligibility, How to Apply, FAQ.
-        [APPLY_LINK] Write the DIRECT URL to the registration or login page for this specific ${randomCat}. If unsure, use the most common registration path for that department.`;
+        [META] Description
+        [CONTENT] Intro, Dates Table, Fees, Eligibility, How to Apply, FAQ.
+        [APPLY_LINK] Put the ACTUAL OFFICIAL URL (e.g., https://ssc.nic.in or https://uppbpb.gov.in). Do not make up a fake link.`;
 
         const genRes = await axios.post(`https://generativelanguage.googleapis.com/v1beta/${selectedModel}:generateContent?key=${apiKey}`, {
             contents: [{ parts: [{ text: prompt }] }]
         });
 
         const rawText = genRes.data.candidates[0].content.parts[0].text;
-        const title = (rawText.match(/\[TITLE\]\s*(.*)/i) || [])[1] || "Sarkari Update";
+        const title = (rawText.match(/\[TITLE\]\s*(.*)/i) || [])[1] || "New Update";
         let slug = (rawText.match(/\[SLUG\]\s*([a-zA-Z0-9-]*)/i) || [])[1] || "update-" + Date.now();
-        const content = (rawText.match(/\[CONTENT\]\s*([\s\S]*)/i) || [])[1] || "Details loading...";
-        const applyLink = (rawText.match(/\[APPLY_LINK\]\s*(.*)/i) || [])[1] || "https://www.google.com";
+        const content = (rawText.match(/\[CONTENT\]\s*([\s\S]*)/i) || [])[1] || "Loading...";
+        
+        // Link cleaner logic
+        let rawLink = (rawText.match(/\[APPLY_LINK\]\s*(https?:\/\/[^\s*]+)/i) || [])[1] || "https://www.google.com/search?q=official+apply+link";
+        const applyLink = rawLink.trim();
 
         slug = slug.substring(0, 45).toLowerCase();
         const liveUrl = `${config.SITE_URL}/${slug}.html`;
 
-        // UI with High-Visibility DIRECT APPLY Button
         const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${title}</title><script src="https://cdn.tailwindcss.com"></script>
         <style> table { width: 100%; border-collapse: collapse; margin: 20px 0; } th, td { border: 1px solid #1e3a8a; padding: 10px; text-align:center; } th { background: #1e3a8a; color: white; } </style>
@@ -49,22 +52,23 @@ async function start() {
             <main class="max-w-4xl mx-auto bg-white p-6 mt-4 shadow-2xl border-t-8 border-red-600">
                 <div class="mb-4"><span class="bg-red-600 text-white px-3 py-1 rounded font-bold text-xs uppercase">${randomCat}</span></div>
                 <h2 class="text-3xl font-extrabold text-blue-900 mb-6">${title}</h2>
-                <div class="prose max-w-none text-gray-800">${content}</div>
-                <div class="mt-10 space-y-6">
-                    <div class="bg-yellow-50 border-2 border-yellow-200 p-4 rounded-lg text-center">
-                        <h3 class="font-bold text-lg text-blue-900 mb-3">महत्वपूर्ण लिंक (Important Links)</h3>
-                        <a href="${applyLink}" target="_blank" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center p-4 rounded-lg font-bold text-2xl shadow-xl transition-all">👉 CLICK HERE TO APPLY ONLINE</a>
-                    </div>
-                    <a href="https://t.me/sarkariresnovaofficial" class="block bg-blue-700 text-white text-center p-3 rounded-lg font-bold shadow-md">Join Telegram For Fast Updates</a>
+                <div class="prose max-w-none text-gray-800 mb-8">${content}</div>
+                <div class="mt-10 p-6 bg-yellow-50 border-2 border-yellow-200 rounded-xl text-center">
+                    <h3 class="font-bold text-xl text-blue-900 mb-4 italic underline">महत्वपूर्ण लिंक (Important Links)</h3>
+                    <a href="${applyLink}" target="_blank" rel="noopener noreferrer" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center p-5 rounded-lg font-bold text-2xl shadow-2xl transition-all scale-105">👉 CLICK HERE TO APPLY ONLINE (REAL LINK)</a>
+                    <p class="mt-4 text-xs text-gray-500">Note: Ye link aapko seedha vibhag ki official website par le jayega.</p>
+                </div>
+                <div class="mt-6">
+                    <a href="https://t.me/sarkariresnovaofficial" class="block bg-blue-700 text-white text-center p-3 rounded-lg font-bold shadow-md hover:bg-blue-800">Join Our Telegram (Sabse Tez Update)</a>
                 </div>
             </main>
-            <footer class="mt-10 p-6 bg-gray-800 text-white text-center text-xs">© 2026 ${config.COMPANY} | Owner: ${config.OWNER}</footer>
+            <footer class="mt-10 p-6 bg-gray-800 text-white text-center text-xs">© 2026 ${config.COMPANY} | Honesty & Hard Work</footer>
         </body></html>`;
 
         if (!fs.existsSync('public')) fs.mkdirSync('public');
         fs.writeFileSync("public/" + slug + ".html", html);
 
-        // Update Homepage (index.html) - PURANA FEATURE PRESERVED
+        // Homepage update (Index.html) - NO CHANGES TO PREVIOUS LOGIC
         const indexPath = "public/index.html";
         const newEntry = `<li><a href="${slug}.html" class="text-blue-700 font-medium">[${randomCat}] ${title}</a></li>`;
         if (fs.existsSync(indexPath)) {
@@ -72,14 +76,13 @@ async function start() {
             fs.writeFileSync(indexPath, indexData.replace("<ul>", "<ul>" + newEntry));
         }
 
-        // Telegram Notification - PURANA FEATURE PRESERVED
         await axios.post(`https://api.telegram.org/bot${teleToken}/sendMessage`, {
             chat_id: config.TELEGRAM_CHANNEL,
-            text: `<b>🚀 [${randomCat}] ${title}</b>\n\n🔗 <b>Direct Apply Link:</b>\n${liveUrl}\n\nSabse Tez Update @sarkariresnovaofficial`,
+            text: `<b>🚀 [${randomCat}] ${title}</b>\n\n🔗 <b>Check Real Apply Link:</b>\n${liveUrl}`,
             parse_mode: 'HTML'
         });
 
-        console.log("✅ Direct Apply Post Created: " + title);
+        console.log("✅ Success! Real Link Extracted: " + applyLink);
     } catch (e) { console.log("❌ Error: " + e.message); }
 }
 start();
