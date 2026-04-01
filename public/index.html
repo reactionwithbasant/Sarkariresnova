@@ -1,109 +1,44 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SarkariResNova | Latest Govt Jobs, Results, Admit Card 2026</title>
-    <meta name="description" content="SarkariResNova: Get latest government job notifications, admit cards, results, and career tools. Best portal for students by RAGHVITA ENTERPRISES.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .nav-link:hover { background: #ff9900; color: #000; border-radius: 4px; transition: 0.3s; }
-        .table-header { background: #000080; color: white; padding: 10px; font-weight: bold; text-align: center; }
-        .job-item { border-bottom: 1px solid #ddd; padding: 8px; color: #0000ff; font-weight: 500; }
-        .job-item:hover { color: #ff0000; text-decoration: underline; }
-    </style>
-</head>
-<body class="bg-gray-100">
-
-    <header class="bg-white border-b-4 border-red-600 shadow">
-        <div class="container mx-auto p-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="text-3xl font-black text-blue-900 italic tracking-tighter">SARKARI RES NOVA</div>
-            <div class="text-sm font-bold text-red-600 mt-2 md:mt-0 italic">WWW.SARKARIRESNOVA.IN</div>
-        </div>
+<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SarkariResNova.com - Latest Govt Jobs, Admit Card, Result</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    .cat-box { border: 1px solid #ccc; min-height: 400px; background: white; border-radius: 5px; overflow: hidden; }
+    .cat-header { color: white; padding: 12px; font-weight: bold; text-align: center; font-size: 18px; border-bottom: 2px solid #ff00ff; }
+    .link-list { list-style: none; padding: 0; margin: 0; }
+    .link-list li { border-bottom: 1px solid #eee; padding: 10px; font-size: 14px; }
+    .link-list li a { color: #0000ff; text-decoration: none; font-weight: 500; }
+    .link-list li a:hover { text-decoration: underline; color: red; }
+</style></head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-[#1e3a8a] text-white p-6 text-center border-b-4 border-yellow-400 shadow-lg">
+        <h1 class="text-3xl font-bold italic">SarkariResNova.com</h1>
+        <p class="text-xs uppercase mt-2 tracking-widest">Powered by RAGHVITA ENTERPRISES</p>
     </header>
 
-    <nav class="bg-black text-white text-sm font-bold uppercase no-print">
-        <div class="container mx-auto flex flex-wrap justify-center space-x-1 md:space-x-4 p-2">
-            <a href="index.html" class="nav-link px-3 py-1">Home</a>
-            <a href="#latest-jobs" class="nav-link px-3 py-1">Latest Jobs</a>
-            <a href="#results" class="nav-link px-3 py-1">Results</a>
-            <a href="#admit-card" class="nav-link px-3 py-1">Admit Card</a>
-            <a href="#tools" class="nav-link px-3 py-1 bg-yellow-500 text-black">Advance Tools</a>
-        </div>
-    </nav>
-
-    <div class="container mx-auto p-2 md:p-6">
-        
-        <div id="tools" class="bg-white p-4 rounded shadow-lg border-2 border-yellow-500 mb-8 no-print">
-            <h2 class="text-center text-xl font-black mb-4 uppercase text-blue-900 border-b pb-2">🎯 Students Advance Career Tools</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button onclick="showTool('resume')" class="bg-blue-600 text-white p-4 rounded font-bold hover:bg-blue-800"><i class="fas fa-file-pdf mb-2"></i><br>Resume Maker</button>
-                <button onclick="showTool('resizer')" class="bg-green-600 text-white p-4 rounded font-bold hover:bg-green-800"><i class="fas fa-expand mb-2"></i><br>Photo Resizer</button>
-                <button onclick="showTool('age')" class="bg-orange-500 text-white p-4 rounded font-bold hover:bg-orange-700"><i class="fas fa-calculator mb-2"></i><br>Age Calculator</button>
-                <button onclick="showTool('pdf')" class="bg-red-600 text-white p-4 rounded font-bold hover:bg-red-800"><i class="fas fa-images mb-2"></i><br>Image to PDF</button>
+    <main class="max-w-6xl mx-auto p-4 mt-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="cat-box shadow-md">
+                <div class="cat-header bg-green-700">Result</div>
+                <ul id="result-list" class="link-list">
+                    </ul>
+            </div>
+            <div class="cat-box shadow-md">
+                <div class="cat-header bg-red-700">Admit Card</div>
+                <ul id="admit-list" class="link-list">
+                    </ul>
+            </div>
+            <div class="cat-box shadow-md">
+                <div class="cat-header bg-blue-700">Latest Job</div>
+                <ul id="job-list" class="link-list">
+                    </ul>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div id="results" class="bg-white border-2 border-green-600 shadow">
-                <div class="table-header bg-green-700">RESULT</div>
-                <div class="p-2 space-y-1">
-                    <div class="job-item"><a href="#">• Bihar Board 10th Result 2026</a></div>
-                    <div class="job-item"><a href="#">• SSC GD Constable Result</a></div>
-                </div>
-            </div>
-            <div id="admit-card" class="bg-white border-2 border-red-600 shadow">
-                <div class="table-header bg-red-700">ADMIT CARD</div>
-                <div class="p-2 space-y-1">
-                    <div class="job-item"><a href="#">• Navy SSR Admit Card 2026</a></div>
-                    <div class="job-item"><a href="#">• Railway NTPC Admit Card</a></div>
-                </div>
-            </div>
-            <div id="latest-jobs" class="bg-white border-2 border-blue-600 shadow">
-                <div class="table-header bg-blue-700">LATEST JOB</div>
-                <div class="p-2 space-y-1">
-                    <div class="job-item"><a href="#">• SSC CGL 2026 Apply Online</a></div>
-                    <div class="job-item"><a href="#">• UPSC Civil Services Notification</a></div>
-                </div>
-            </div>
-        </div>
+        <div style="display:none;"><ul></ul></div>
+    </main>
 
-        <div id="toolModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
-            <div class="bg-white p-6 rounded-lg w-full max-w-2xl overflow-y-auto max-h-[90vh]">
-                <div class="flex justify-between border-b pb-2 mb-4">
-                    <h3 id="modalTitle" class="text-xl font-bold">Tool</h3>
-                    <button onclick="closeTool()" class="text-red-600 font-bold">CLOSE [X]</button>
-                </div>
-                <div id="toolContent"></div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-gray-800 text-white mt-12 p-8 no-print">
-        <div class="container mx-auto text-center space-x-4">
-            <a href="about.html" class="hover:text-yellow-500">About Us</a>
-            <a href="privacy.html" class="hover:text-yellow-500">Privacy Policy</a>
-            <a href="disclaimer.html" class="hover:text-yellow-500">Disclaimer</a>
-            <a href="contact.html" class="hover:text-yellow-500">Contact Us</a>
-            <p class="mt-4 opacity-50 text-xs">© 2026 RAGHVITA ENTERPRISES. All Rights Reserved.</p>
-        </div>
+    <footer class="mt-12 p-10 bg-gray-900 text-white text-center">
+        <p class="text-sm font-bold">© 2026 RAGHVITA ENTERPRISES</p>
+        <p class="text-[10px] text-gray-500 mt-2 italic">Honesty, Values, and Hard Work</p>
     </footer>
-
-    <script>
-        function showTool(type) {
-            const modal = document.getElementById('toolModal');
-            const content = document.getElementById('toolContent');
-            modal.classList.remove('hidden');
-            if(type === 'age') {
-                content.innerHTML = '<input type="date" id="dob" class="border p-2 w-full mb-2"><button onclick="alert(\'Age calculated!\')" class="bg-blue-600 text-white p-2 w-full">Calculate</button>';
-            } else if(type === 'resume') {
-                content.innerHTML = '<p class="text-sm text-gray-600 mb-4 font-bold">CV Maker Form</p><input type="text" placeholder="Your Name" class="border p-2 w-full mb-2"><textarea placeholder="Education" class="border p-2 w-full mb-2"></textarea><button class="bg-blue-600 text-white p-2 w-full">Generate & Download</button>';
-            } else {
-                content.innerHTML = '<p>Coming Soon in 2.0 Update!</p>';
-            }
-        }
-        function closeTool() { document.getElementById('toolModal').classList.add('hidden'); }
-    </script>
-</body>
-</html>
+</body></html>
