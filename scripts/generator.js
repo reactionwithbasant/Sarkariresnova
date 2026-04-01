@@ -7,7 +7,7 @@ async function start() {
     const teleToken = process.env.TELEGRAM_TOKEN;
 
     try {
-        console.log("🚀 RAGHVITA ENGINE: Full Content Cleanup & Image Fix...");
+        console.log("🚀 RAGHVITA ENGINE: Final Deployment Mode...");
         
         const listRes = await axios.get('https://generativelanguage.googleapis.com/v1beta/models?key=' + apiKey);
         const selectedModel = listRes.data.models.find(m => m.name.includes('gemini-2.5-flash'))?.name || "models/gemini-1.5-flash";
@@ -15,8 +15,7 @@ async function start() {
         const cats = ["Latest Job", "Admit Card", "Result", "Govt Scheme", "Syllabus"];
         const randomCat = cats[Math.floor(Math.random() * cats.length)];
 
-        // Strict Prompt to avoid Markdown & ensure dynamic content
-        const prompt = "Act as a Sarkari Expert Blogger. Write a detailed professional 800-word Hindi update for " + randomCat + " 2026. STRUCTURE STRICTLY: [TITLE] Name, [SLUG] unique-slug, [DEPT] Department Name (e.g. SSC, UPSC, Police, Railway), [CONTENT] Detailed Introduction, 2 HTML Tables, Steps to Apply, and 5 FAQs. [APPLY_LINK] Official Portal URL. NO MARKDOWN SYMBOLS (**, ###, ---). Clean text only.";
+        const prompt = "Write a professional 800-word Hindi News Article for " + randomCat + " 2026. Use HTML tags for tables. FORMAT: [TITLE] Name, [SLUG] unique-slug, [DEPT] Department, [CONTENT] Introduction, Tables, Steps, FAQs. [APPLY_LINK] Official URL. NO stars or hashes.";
 
         const genRes = await axios.post('https://generativelanguage.googleapis.com/v1beta/' + selectedModel + ':generateContent?key=' + apiKey, {
             contents: [{ parts: [{ text: prompt }] }]
@@ -24,31 +23,26 @@ async function start() {
 
         let rawText = genRes.data.candidates[0].content.parts[0].text;
         
-        // --- 1. POWERFUL CLEANUP (Symbols & Markdown) ---
-        rawText = rawText.replace(/\*\*/g, '').replace(/###/g, '').replace(/---/g, '').replace(/[*#]/g, '').replace(/`/g, '');
-        rawText = rawText.replace(/\s+/g, ' ').trim(); // Clear excessive spaces
+        // --- CLEANUP LOGIC ---
+        rawText = rawText.replace(/\*\*/g, '').replace(/###/g, '').replace(/---/g, '').replace(/[*#]/g, '');
 
-        const titleMatch = (rawText.match(/\[TITLE\]\s*(.*)/i) || [])[1];
-        const title = titleMatch ? titleMatch.trim() : "Sarkari Update 2026";
-        
+        const title = (rawText.match(/\[TITLE\]\s*(.*)/i) || [])[1] || "Sarkari Update 2026";
         const dept = (rawText.match(/\[DEPT\]\s*(.*)/i) || [])[1] || "Government";
         const slugMatch = (rawText.match(/\[SLUG\]\s*([a-zA-Z0-9-]*)/i) || [])[1] || "job-" + Date.now();
         
         let contentBody = (rawText.split(/\[CONTENT\]/i)[1] || "").split(/\[APPLY_LINK\]/i)[0].trim();
-        contentBody = contentBody.replace(/\n/g, '<br>'); // Newlines to Breaks
         
-        // --- 2. SMART IMAGE LOGIC (Department Specific) ---
-        // Using dynamic Unsplash query for related images
-        const imageUrl = "https://source.unsplash.com/800x450/?" + encodeURIComponent(dept + ",india,office");
-
-        // Beautify sections with Tailwind
-        contentBody = contentBody.replace(/(Avedan Kaise Karein|FAQ|FAQs|Aksar Puche Jane Wale Sawal)/gi, '<br><h3 class="text-2xl font-bold text-blue-900 mt-10 mb-4 bg-gray-100 p-3 rounded border-l-8 border-blue-600"></h3>');
+        // Convert new lines to <p> tags for visibility
+        contentBody = contentBody.split('\n').map(line => line.trim() ? `<p class="mb-4">${line}</p>` : '').join('');
 
         const applyLink = (rawText.match(/\[APPLY_LINK\]\s*(https?:\/\/[^\s*]+)/i) || [])[1] || "https://www.google.com";
         const slug = slugMatch.substring(0, 45).toLowerCase();
         const liveUrl = config.SITE_URL + "/" + slug + ".html";
+        
+        // --- STABLE IMAGE LINK ---
+        const imageUrl = "https://images.unsplash.com/photo-1586281380349-631531a34d4f?auto=format&fit=crop&q=80&w=800";
 
-        const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><script src="https://cdn.tailwindcss.com"></script><style>table{width:100%;border-collapse:collapse;margin:25px 0}th,td{border:1px solid #1e3a8a;padding:12px;text-align:center}th{background:#1e3a8a;color:#fff}.prose p{line-height:1.8;margin-bottom:15px;color:#333}</style></head><body class="bg-slate-50 font-sans"><header class="bg-blue-900 text-white p-6 text-center shadow-lg border-b-4 border-yellow-400"><h1 class="text-2xl font-bold italic">SarkariResNova.com</h1><p class="text-[10px] uppercase font-bold tracking-widest">${config.COMPANY}</p></header><main class="max-w-4xl mx-auto bg-white p-8 mt-6 shadow-2xl border-t-8 border-red-600 rounded-b-xl"><span class="bg-red-600 text-white px-3 py-1 rounded font-bold text-xs uppercase mb-4 inline-block">${dept} Update</span><h2 class="text-3xl font-extrabold text-slate-900 mb-8 leading-tight">${title}</h2><img src="${imageUrl}" alt="${dept} Official News" class="w-full h-auto rounded-xl shadow-lg mb-10 border-2 border-gray-100"><div class="prose max-w-none text-slate-800">${contentBody}</div><div class="mt-14 p-10 bg-slate-900 rounded-3xl text-center shadow-inner"><h3 class="font-bold text-xl text-yellow-400 mb-6 italic underline underline-offset-8">Official Links</h3><a href="${applyLink}" target="_blank" rel="noopener" class="block w-full bg-red-600 text-white p-6 rounded-2xl font-black text-3xl shadow-xl hover:bg-red-700 transition-all mb-4">👉 CLICK HERE TO APPLY</a></div></main><footer class="mt-10 p-8 bg-slate-900 text-white text-center text-xs">© 2026 ${config.COMPANY}</footer></body></html>`;
+        const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><script src="https://cdn.tailwindcss.com"></script><style>table{width:100%;border-collapse:collapse;margin:25px 0}th,td{border:1px solid #1e3a8a;padding:12px;text-align:center}th{background:#1e3a8a;color:#fff}</style></head><body class="bg-gray-50"><header class="bg-blue-900 text-white p-6 text-center shadow-lg border-b-4 border-yellow-400"><h1 class="text-2xl font-bold italic">SarkariResNova.com</h1><p class="text-[10px] uppercase font-bold">${config.COMPANY}</p></header><main class="max-w-4xl mx-auto bg-white p-8 mt-6 shadow-2xl border-t-8 border-red-600 rounded-b-xl"><span class="bg-blue-600 text-white px-3 py-1 rounded font-bold text-xs uppercase mb-4 inline-block">${dept} | ${randomCat}</span><h2 class="text-3xl font-extrabold text-blue-900 mb-8">${title}</h2><img src="${imageUrl}" alt="Official News" class="w-full h-auto rounded-xl shadow-lg mb-10 border"><div class="prose max-w-none text-gray-800">${contentBody}</div><div class="mt-12 p-10 bg-slate-900 rounded-3xl text-center"><h3 class="font-bold text-xl text-yellow-400 mb-6 underline">Important Links</h3><a href="${applyLink}" target="_blank" rel="noopener" class="block w-full bg-red-600 text-white p-5 rounded-2xl font-bold text-2xl shadow-xl hover:bg-red-700 transition-all mb-4">👉 CLICK HERE TO APPLY</a><a href="https://t.me/sarkariresnovaofficial" class="text-blue-400 font-bold underline">Join Telegram Group</a></div></main><footer class="mt-10 p-8 bg-gray-900 text-white text-center text-xs">© 2026 ${config.COMPANY}</footer></body></html>`;
 
         if (!fs.existsSync('public')) fs.mkdirSync('public');
         fs.writeFileSync("public/" + slug + ".html", html);
@@ -61,10 +55,10 @@ async function start() {
         }
 
         await axios.post('https://api.telegram.org/bot' + teleToken + '/sendMessage', {
-            chat_id: config.TELEGRAM_CHANNEL, text: '<b>🚀 [' + randomCat + '] ' + title + '</b>\n🔗 ' + liveUrl, parse_mode: 'HTML'
+            chat_id: config.TELEGRAM_CHANNEL, text: '<b>🚀 ' + title + '</b>\n🔗 ' + liveUrl, parse_mode: 'HTML'
         });
 
-        console.log("✅ AdSense Ready! Clean Text, Image, and SEO safe.");
+        console.log("✅ AdSense Ready! Clean Text & Image fixed.");
     } catch (e) { console.log("❌ Error: " + e.message); }
 }
 start();
