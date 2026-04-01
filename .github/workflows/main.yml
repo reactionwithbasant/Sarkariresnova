@@ -1,5 +1,8 @@
-name: SarkariResNova_v2_Engine
-on: [workflow_dispatch]
+name: Raghvita_Auto_Engine
+on:
+  schedule:
+    - cron: '0 */3 * * *'  # Har 3 ghante mein (UTC time)
+  workflow_dispatch:      # Manual button bhi rahega
 permissions:
   contents: write
 jobs:
@@ -11,7 +14,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm install axios
-      - name: Run Engine & Deploy
+      - name: Run AI & Deploy
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -21,6 +24,6 @@ jobs:
           git config --global user.name "Basant Kumar"
           git config --global user.email "raghvitaenterprises@gmail.com"
           git add .
-          git commit -m "Auto-post: New Article Created" || echo "No changes"
+          git commit -m "Auto-Update: SarkariResNova V2 Article" || echo "No changes"
           git push origin main
           npx firebase-tools deploy --only hosting:sarkariresnova-site --token "$FIREBASE_TOKEN" --project affiearn-ad591
