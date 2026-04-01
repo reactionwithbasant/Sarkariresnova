@@ -2,43 +2,55 @@
 <title>SarkariResNova.com - Latest Govt Jobs, Admit Card, Result</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-    .cat-box { border: 1px solid #ccc; min-height: 400px; background: white; border-radius: 5px; overflow: hidden; }
-    .cat-header { color: white; padding: 12px; font-weight: bold; text-align: center; font-size: 18px; border-bottom: 2px solid #ff00ff; }
+    body { background-color: #f4f4f4; font-family: sans-serif; }
+    .header-main { background-color: #1e3a8a; color: white; padding: 20px; text-align: center; border-bottom: 5px solid #ffcc00; }
+    .nav-bar { background-color: #000; color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 14px; }
+    
+    /* Sarkari Result Box Design */
+    .box-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin: 20px auto; max-width: 1100px; padding: 10px; }
+    .card { background: #fff; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .card-header { padding: 10px; font-weight: bold; text-align: center; color: white; font-size: 18px; text-transform: uppercase; }
+    .bg-result { background-color: #2e7d32; } /* Green */
+    .bg-admit { background-color: #c62828; }  /* Red */
+    .bg-jobs { background-color: #1565c0; }   /* Blue */
+    
     .link-list { list-style: none; padding: 0; margin: 0; }
-    .link-list li { border-bottom: 1px solid #eee; padding: 10px; font-size: 14px; }
-    .link-list li a { color: #0000ff; text-decoration: none; font-weight: 500; }
-    .link-list li a:hover { text-decoration: underline; color: red; }
+    .link-list li { border-bottom: 1px solid #eee; padding: 10px; font-size: 14px; transition: 0.3s; }
+    .link-list li:hover { background-color: #fff9c4; }
+    .link-list li a { color: #0000ee; text-decoration: none; font-weight: 500; }
+    .link-list li a:hover { color: #ff0000; text-decoration: underline; }
+    
+    footer { background-color: #222; color: white; text-align: center; padding: 20px; margin-top: 30px; font-size: 12px; }
 </style></head>
-<body class="bg-gray-100 font-sans">
-    <header class="bg-[#1e3a8a] text-white p-6 text-center border-b-4 border-yellow-400 shadow-lg">
-        <h1 class="text-3xl font-bold italic">SarkariResNova.com</h1>
-        <p class="text-xs uppercase mt-2 tracking-widest">Powered by RAGHVITA ENTERPRISES</p>
-    </header>
+<body>
+    <div class="header-main">
+        <h1 class="text-4xl font-black italic tracking-tighter">SARKARI RES NOVA</h1>
+        <p class="text-sm mt-1 uppercase font-bold tracking-widest">Powered by RAGHVITA ENTERPRISES</p>
+    </div>
+    <div class="nav-bar">HOME | LATEST JOBS | ADMIT CARD | RESULT | CONTACT US</div>
 
-    <main class="max-w-6xl mx-auto p-4 mt-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="cat-box shadow-md">
-                <div class="cat-header bg-green-700">Result</div>
-                <ul id="result-list" class="link-list">
-                    </ul>
-            </div>
-            <div class="cat-box shadow-md">
-                <div class="cat-header bg-red-700">Admit Card</div>
-                <ul id="admit-list" class="link-list">
-                    </ul>
-            </div>
-            <div class="cat-box shadow-md">
-                <div class="cat-header bg-blue-700">Latest Job</div>
-                <ul id="job-list" class="link-list">
-                    </ul>
-            </div>
+    <div class="box-container">
+        <div class="card">
+            <div class="card-header bg-result">Result</div>
+            <ul class="link-list">
+                <ul></ul> </div>
         </div>
 
-        <div style="display:none;"><ul></ul></div>
-    </main>
+        <div class="card">
+            <div class="card-header bg-admit">Admit Card</div>
+            <ul class="link-list">
+                </div>
+        </div>
 
-    <footer class="mt-12 p-10 bg-gray-900 text-white text-center">
-        <p class="text-sm font-bold">© 2026 RAGHVITA ENTERPRISES</p>
-        <p class="text-[10px] text-gray-500 mt-2 italic">Honesty, Values, and Hard Work</p>
+        <div class="card">
+            <div class="card-header bg-jobs">Latest Jobs</div>
+            <ul class="link-list">
+                </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 RAGHVITA ENTERPRISES | Honesty, Values, and Hard Work</p>
+        <p class="mt-2 opacity-50 italic">Inspired by Raghav & Kavita</p>
     </footer>
 </body></html>
