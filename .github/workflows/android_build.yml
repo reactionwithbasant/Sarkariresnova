@@ -14,7 +14,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Install Tools & Dependencies
+      - name: Install Tools
         run: |
           npm install -g @capacitor/cli
           npm install @capacitor/core @capacitor/android --force
@@ -25,14 +25,16 @@ jobs:
           cp index.html www/
           cp main.js www/
           if [ ! -f "capacitor.config.json" ]; then
-            echo '{"appId": "com.raghvita.ad2win","appName": "Ad2Win","webDir": "www","bundledWebRuntime": false}' > capacitor.config.json
+            echo '{"appId": "com.raghvita.ad2win","appName": "Ad2Win","webDir": "www"}' > capacitor.config.json
           fi
 
-      - name: Add Android Platform
+      - name: Add Android & Fix Kotlin
         run: |
           if [ ! -d "android" ]; then
             cap add android
           fi
+          # Kotlin version fix for Gradle 8+
+          sed -i 's/kotlin_version = .*/kotlin_version = "1.9.20"/' android/build.gradle
           cap sync android
 
       - name: Build with Gradle
