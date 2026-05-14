@@ -1,109 +1,178 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SarkariResNova | Latest Govt Jobs, Results, Admit Card 2026</title>
-    <meta name="description" content="SarkariResNova: Get latest government job notifications, admit cards, results, and career tools. Best portal for students by RAGHVITA ENTERPRISES.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .nav-link:hover { background: #ff9900; color: #000; border-radius: 4px; transition: 0.3s; }
-        .table-header { background: #000080; color: white; padding: 10px; font-weight: bold; text-align: center; }
-        .job-item { border-bottom: 1px solid #ddd; padding: 8px; color: #0000ff; font-weight: 500; }
-        .job-item:hover { color: #ff0000; text-decoration: underline; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ad2Win | Premium Gaming & Earning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #0f172a; color: #f8fafc; min-height: 100vh; overflow-x: hidden; padding-bottom: 80px; }
+    
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
+    .logo { font-size: 24px; font-weight: 800; background: linear-gradient(to right, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .live-ticker { background: rgba(0, 0, 0, 0.8); color: #fbbf24; padding: 8px 0; font-size: 13px; font-weight: 600; border-bottom: 1px solid rgba(251, 191, 36, 0.2); display: flex; align-items: center; }
+    .live-ticker span { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 10px; margin: 0 10px; font-size: 11px; }
+
+    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
+    
+    /* Dual Wallet Styles */
+    .wallet-container { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    .wallet-box { flex: 1; padding: 10px; }
+    .wallet-box:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
+    .wallet-title { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+    .coin-val { font-size: 32px; font-weight: 800; color: #fbbf24; }
+    .rupee-val { font-size: 32px; font-weight: 800; color: #4ade80; }
+    .timer-text { font-size: 10px; color: #38bdf8; margin-top: 5px; font-weight: bold; background: rgba(56, 189, 248, 0.1); padding: 3px 8px; border-radius: 8px; display: inline-block; }
+
+    .btn { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s; }
+    .btn:active { transform: scale(0.96); }
+    .btn-danger { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+    .btn-dark { background: rgba(255,255,255,0.1); }
+    .btn-gold { background: linear-gradient(135deg, #f59e0b, #d97706); display: none; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+    
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; }
+    .game-item { background: linear-gradient(145deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8)); padding: 15px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+    .game-icon { font-size: 40px; margin-bottom: 5px; }
+    
+    .game-board { margin: 20px 0; min-height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .slot-box { background: #1e293b; width: 60px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 35px; border: 2px solid #38bdf8; }
+    .coin { width: 80px; height: 80px; transition: transform 2s; transform-style: preserve-3d; border-radius: 50%; background: gold; display: flex; align-items: center; justify-content: center; font-size: 35px; color: #b45309; }
+    .spin-wheel { font-size: 80px; transition: transform 2s ease-out; }
+    .dice-icon { font-size: 80px; }
+    
+    .interactive-btn { background: #1e293b; border: 2px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; font-size: 30px; border-radius: 15px; cursor: pointer; }
+    .scratch-area { background: #475569; width: 200px; height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 20px; font-weight: bold; cursor: pointer; border: 2px dashed #94a3b8; }
+    
+    .input-field { width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; outline: none; }
+    .section { display: none; }
+    .active-section { display: block; animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    #cooldownAlert { display: none; background: rgba(244, 63, 94, 0.1); color: #f43f5e; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-bottom: 15px; border: 1px solid rgba(244, 63, 94, 0.3); text-align: center; }
+    .daily-limit { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: bold; margin: 10px 20px; text-align: center; }
+  </style>
 </head>
-<body class="bg-gray-100">
+<body>
 
-    <header class="bg-white border-b-4 border-red-600 shadow">
-        <div class="container mx-auto p-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="text-3xl font-black text-blue-900 italic tracking-tighter">SARKARI RES NOVA</div>
-            <div class="text-sm font-bold text-red-600 mt-2 md:mt-0 italic">WWW.SARKARIRESNOVA.IN</div>
-        </div>
-    </header>
+  <div class="live-ticker">
+    <span>LIVE</span>
+    <marquee id="tickerText" scrollamount="5" behavior="scroll" direction="left">Loading withdrawals...</marquee>
+  </div>
 
-    <nav class="bg-black text-white text-sm font-bold uppercase no-print">
-        <div class="container mx-auto flex flex-wrap justify-center space-x-1 md:space-x-4 p-2">
-            <a href="index.html" class="nav-link px-3 py-1">Home</a>
-            <a href="#latest-jobs" class="nav-link px-3 py-1">Latest Jobs</a>
-            <a href="#results" class="nav-link px-3 py-1">Results</a>
-            <a href="#admit-card" class="nav-link px-3 py-1">Admit Card</a>
-            <a href="#tools" class="nav-link px-3 py-1 bg-yellow-500 text-black">Advance Tools</a>
-        </div>
-    </nav>
+  <div class="navbar">
+    <div class="logo">Ad2Win</div>
+    <div style="font-size: 14px; font-weight: bold;">👤 <span id="userName">User</span></div>
+  </div>
 
-    <div class="container mx-auto p-2 md:p-6">
-        
-        <div id="tools" class="bg-white p-4 rounded shadow-lg border-2 border-yellow-500 mb-8 no-print">
-            <h2 class="text-center text-xl font-black mb-4 uppercase text-blue-900 border-b pb-2">🎯 Students Advance Career Tools</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button onclick="showTool('resume')" class="bg-blue-600 text-white p-4 rounded font-bold hover:bg-blue-800"><i class="fas fa-file-pdf mb-2"></i><br>Resume Maker</button>
-                <button onclick="showTool('resizer')" class="bg-green-600 text-white p-4 rounded font-bold hover:bg-green-800"><i class="fas fa-expand mb-2"></i><br>Photo Resizer</button>
-                <button onclick="showTool('age')" class="bg-orange-500 text-white p-4 rounded font-bold hover:bg-orange-700"><i class="fas fa-calculator mb-2"></i><br>Age Calculator</button>
-                <button onclick="showTool('pdf')" class="bg-red-600 text-white p-4 rounded font-bold hover:bg-red-800"><i class="fas fa-images mb-2"></i><br>Image to PDF</button>
-            </div>
-        </div>
+  <!-- Login Section -->
+  <div id="loginSection" class="section active-section">
+    <div class="glass-card" style="margin-top: 50px;">
+      <h1 style="font-size: 50px;">🪙</h1>
+      <h2>Play & Earn Daily</h2>
+      <button class="btn" id="btnGoogleLogin" style="background: white; color: black; margin-top: 30px;">Login with Google</button>
+    </div>
+  </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div id="results" class="bg-white border-2 border-green-600 shadow">
-                <div class="table-header bg-green-700">RESULT</div>
-                <div class="p-2 space-y-1">
-                    <div class="job-item"><a href="#">• Bihar Board 10th Result 2026</a></div>
-                    <div class="job-item"><a href="#">• SSC GD Constable Result</a></div>
-                </div>
-            </div>
-            <div id="admit-card" class="bg-white border-2 border-red-600 shadow">
-                <div class="table-header bg-red-700">ADMIT CARD</div>
-                <div class="p-2 space-y-1">
-                    <div class="job-item"><a href="#">• Navy SSR Admit Card 2026</a></div>
-                    <div class="job-item"><a href="#">• Railway NTPC Admit Card</a></div>
-                </div>
-            </div>
-            <div id="latest-jobs" class="bg-white border-2 border-blue-600 shadow">
-                <div class="table-header bg-blue-700">LATEST JOB</div>
-                <div class="p-2 space-y-1">
-                    <div class="job-item"><a href="#">• SSC CGL 2026 Apply Online</a></div>
-                    <div class="job-item"><a href="#">• UPSC Civil Services Notification</a></div>
-                </div>
-            </div>
+  <!-- Dashboard Section -->
+  <div id="dashboardSection" class="section">
+    <div class="glass-card" style="margin-top: 10px; padding: 15px;">
+      
+      <!-- Dual Wallet Area -->
+      <div class="wallet-container">
+        <!-- Coins Wallet -->
+        <div class="wallet-box">
+          <div class="wallet-title">Coins Wallet</div>
+          <div class="coin-val">🪙 <span id="txtCoins">0</span></div>
+          <div class="timer-text" id="txtConvertTimer">Calculating...</div>
         </div>
+        <!-- Main Balance -->
+        <div class="wallet-box">
+          <div class="wallet-title">Main Balance</div>
+          <div class="rupee-val">₹ <span id="txtRupees">0.00</span></div>
+          <div style="font-size: 10px; color: #4ade80; margin-top: 5px;">Min Withdraw ₹100</div>
+        </div>
+      </div>
 
-        <div id="toolModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
-            <div class="bg-white p-6 rounded-lg w-full max-w-2xl overflow-y-auto max-h-[90vh]">
-                <div class="flex justify-between border-b pb-2 mb-4">
-                    <h3 id="modalTitle" class="text-xl font-bold">Tool</h3>
-                    <button onclick="closeTool()" class="text-red-600 font-bold">CLOSE [X]</button>
-                </div>
-                <div id="toolContent"></div>
-            </div>
-        </div>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button class="btn btn-danger" id="btnGoWithdraw" style="margin-top: 0;">Withdraw</button>
+        <button class="btn" id="btnGoRefer" style="margin-top: 0; background: #8b5cf6;">Refer & Earn</button>
+      </div>
     </div>
 
-    <footer class="bg-gray-800 text-white mt-12 p-8 no-print">
-        <div class="container mx-auto text-center space-x-4">
-            <a href="about.html" class="hover:text-yellow-500">About Us</a>
-            <a href="privacy.html" class="hover:text-yellow-500">Privacy Policy</a>
-            <a href="disclaimer.html" class="hover:text-yellow-500">Disclaimer</a>
-            <a href="contact.html" class="hover:text-yellow-500">Contact Us</a>
-            <p class="mt-4 opacity-50 text-xs">© 2026 RAGHVITA ENTERPRISES. All Rights Reserved.</p>
-        </div>
-    </footer>
+    <div class="daily-limit">🎯 Today's Remaining Plays: <span id="txtRemainingPlays">40</span>/40</div>
+    <div id="cooldownAlert" style="margin: 0 20px;">⏱️ Wait <span id="cooldownSeconds">60</span>s before playing again!</div>
 
-    <script>
-        function showTool(type) {
-            const modal = document.getElementById('toolModal');
-            const content = document.getElementById('toolContent');
-            modal.classList.remove('hidden');
-            if(type === 'age') {
-                content.innerHTML = '<input type="date" id="dob" class="border p-2 w-full mb-2"><button onclick="alert(\'Age calculated!\')" class="bg-blue-600 text-white p-2 w-full">Calculate</button>';
-            } else if(type === 'resume') {
-                content.innerHTML = '<p class="text-sm text-gray-600 mb-4 font-bold">CV Maker Form</p><input type="text" placeholder="Your Name" class="border p-2 w-full mb-2"><textarea placeholder="Education" class="border p-2 w-full mb-2"></textarea><button class="bg-blue-600 text-white p-2 w-full">Generate & Download</button>';
-            } else {
-                content.innerHTML = '<p>Coming Soon in 2.0 Update!</p>';
-            }
-        }
-        function closeTool() { document.getElementById('toolModal').classList.add('hidden'); }
-    </script>
+    <h3 style="padding: 10px 20px; font-size: 16px;">Top 10 Games</h3>
+    <div class="grid" id="gamesGrid"></div>
+    
+    <div style="padding: 20px;">
+        <button class="btn btn-dark" id="btnGoHistory" style="margin-bottom: 10px;">📜 Transaction History</button>
+        <button class="btn btn-dark" onclick="window.location.href='mailto:raghvitaenterprises@gmail.com'" style="background: rgba(255,255,255,0.05); color: #38bdf8; border: 1px solid #38bdf8;">📧 Contact Support</button>
+    </div>
+  </div>
+
+  <!-- Game Play Area -->
+  <div id="gamePlaySection" class="section">
+    <div id="activeGameContainer" class="glass-card" style="margin-top: 40px;">
+      <h2 id="gameTitle">Game Name</h2>
+      <p id="gameInstruction" style="font-size:12px; color:#94a3b8; margin-top:5px;"></p>
+      
+      <div id="dynamicGameBoard" class="game-board"></div>
+
+      <h3 id="gameResultText" style="margin: 15px 0; min-height: 25px; font-size: 18px;"></h3>
+      
+      <button class="btn" id="btnStartGameAction">▶ Play Now</button>
+      <button class="btn btn-gold" id="btnClaimReward">📺 Watch Ad to Claim</button>
+      <button class="btn btn-dark" id="btnLeaveGame" style="margin-top: 15px;">Back to Menu</button>
+    </div>
+  </div>
+
+  <!-- Refer Section -->
+  <div id="referSection" class="section">
+    <div class="glass-card" style="margin-top: 20px;">
+      <h1 style="font-size: 50px;">🎁</h1>
+      <h2>Refer & Earn</h2>
+      <p style="color: #94a3b8; font-size: 13px; margin: 10px 0;">Get ₹10 (1000 Coins) per friend, they get ₹5 (500 Coins)!</p>
+      <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; margin: 20px 0;">
+        <span style="font-size: 12px; color: #94a3b8;">Your Code:</span>
+        <h3 id="myReferCode" style="color: #38bdf8; letter-spacing: 2px; font-size: 24px;">LOADING</h3>
+      </div>
+      <button class="btn" id="btnShareRefer" style="background: #22c55e;">🚀 Share Link</button>
+      <hr style="border: 1px solid rgba(255,255,255,0.05); margin: 20px 0;">
+      <div id="referralInputArea">
+        <input type="text" id="inputReferCode" class="input-field" placeholder="Enter Friend's Code">
+        <button class="btn" id="btnApplyRefer">Apply Code</button>
+      </div>
+      <div id="referralSuccessArea" style="display:none; color:#4ade80; padding:15px;">✅ Referral Applied!</div>
+      <button class="btn btn-dark" id="btnBackFromRefer" style="margin-top: 20px;">Back</button>
+    </div>
+  </div>
+
+  <!-- Withdraw Section -->
+  <div id="withdrawSection" class="section">
+    <div class="glass-card">
+      <h2>Withdraw Main Balance</h2>
+      <p style="color: #f43f5e; font-size: 12px; margin-bottom: 10px;">Withdrawal is made in Rupees (₹). Min ₹100 required.</p>
+      <input type="text" id="upiId" class="input-field" placeholder="Enter UPI ID">
+      <input type="number" id="withdrawAmount" class="input-field" placeholder="Amount (₹)">
+      <button class="btn btn-danger" id="btnSubmitWithdraw">Request Payout</button>
+      <button class="btn btn-dark" id="btnBackToDash2">Back</button>
+    </div>
+  </div>
+
+  <!-- History Section -->
+  <div id="historySection" class="section">
+    <div class="glass-card" style="padding: 15px;">
+      <h2>History</h2>
+      <div id="historyList" style="margin-top: 20px; font-size: 13px; text-align: left; max-height: 350px; overflow-y: auto;"></div>
+      <button class="btn btn-dark" id="btnBackToDash3" style="margin-top: 20px;">Back</button>
+    </div>
+  </div>
+
+  <script type="module" src="/main.js"></script>
 </body>
 </html>
+
