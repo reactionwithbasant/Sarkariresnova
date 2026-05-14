@@ -14,33 +14,33 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Install Tools
-        run: |
-          npm install -g @capacitor/cli
-          npm install @capacitor/core @capacitor/android --force
+      - name: Install Capacitor CLI
+        run: npm install -g @capacitor/cli
 
-      - name: Prepare Web Assets
+      - name: Setup Project & Sync
         run: |
+          npm install @capacitor/core @capacitor/android --force
           mkdir -p www
           cp index.html www/
           cp main.js www/
-          if [ ! -f "capacitor.config.json" ]; then
-            echo '{"appId": "com.raghvita.ad2win","appName": "Ad2Win","webDir": "www"}' > capacitor.config.json
-          fi
-
-      - name: Add Android & Fix Kotlin
-        run: |
-          if [ ! -d "android" ]; then
-            cap add android
-          fi
-          # Kotlin version fix for Gradle 8+
+          # Create fresh config
+          echo '{"appId":"com.raghvita.ad2win","appName":"Ad2Win","webDir":"www"}' > capacitor.config.json
+          
+          # Delete old android folder to avoid cache conflicts
+          rm -rf android
+          cap add android
+          
+          # Force Kotlin and Gradle compatibility
           sed -i 's/kotlin_version = .*/kotlin_version = "1.9.20"/' android/build.gradle
+          # Fix for Namespace error in new Gradle
+          echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
+          
           cap sync android
 
-      - name: Build with Gradle
+      - name: Build Final APK
         run: |
           chmod +x android/gradlew
-          cd android && ./gradlew assembleDebug
+          cd android && ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
