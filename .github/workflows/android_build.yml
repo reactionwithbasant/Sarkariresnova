@@ -14,20 +14,27 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Dependencies
-        run: npm install --force
-
-      - name: Setup Android & Sync
+      - name: Install Tools & Dependencies
         run: |
-          npm install @capacitor/android
-          if [ ! -d "android" ]; then
-            npx cap add android
+          npm install -g @capacitor/cli
+          npm install @capacitor/core @capacitor/android --force
+
+      - name: Prepare Web Assets
+        run: |
+          mkdir -p www
+          cp index.html www/
+          cp main.js www/
+          # Create a dummy capacitor config if missing
+          if [ ! -f "capacitor.config.json" ]; then
+            echo '{"appId": "com.raghvita.ad2win","appName": "Ad2Win","webDir": "www","bundledWebRuntime": false}' > capacitor.config.json
           fi
-          # Build process bypass if script missing
-          mkdir -p dist
-          cp index.html dist/
-          cp main.js dist/
-          npx cap sync android
+
+      - name: Add Android Platform
+        run: |
+          if [ ! -d "android" ]; then
+            cap add android
+          fi
+          cap sync android
 
       - name: Build with Gradle
         run: |
