@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "849119353425",
+    "firebase_url": "https://raghvitamart-default-rtdb.firebaseio.com",
+    "project_id": "raghvitamart",
+    "storage_bucket": "raghvitamart.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849119353425:android:6eba222fff4b7a8743f670",
+        "android_client_info": {
+          "package_name": "com.raghvita.ad2win"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849119353425-c9f0b8n41vognsalfgavh440614cn5ce.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.raghvita.ad2win",
+            "certificate_hash": "634a0aa6998e5c63cb74775ddece74c4a3b92153"
+          }
+        },
+        {
+          "client_id": "849119353425-da1h69vsf869t9ltf6umifkfqtuvfjae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbrsmTRaLkm1SuIBiWZhM4bOI6wPDAcIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849119353425-1ge0g8k9jdoco3oslqcr61vugn2t6m37.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
