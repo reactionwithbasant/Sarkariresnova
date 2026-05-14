@@ -14,34 +14,33 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Install Capacitor CLI
+      - name: Install Tools
         run: npm install -g @capacitor/cli
 
-      - name: Setup Project & Sync
+      - name: Setup Project
         run: |
           npm install @capacitor/core @capacitor/android --force
           mkdir -p www
           cp index.html www/
           cp main.js www/
-          # Create fresh config
           echo '{"appId":"com.raghvita.ad2win","appName":"Ad2Win","webDir":"www"}' > capacitor.config.json
           
-          # Delete old android folder to avoid cache conflicts
           rm -rf android
           cap add android
           
-          # Force Kotlin and Gradle compatibility
-          sed -i 's/kotlin_version = .*/kotlin_version = "1.9.20"/' android/build.gradle
-          # Fix for Namespace error in new Gradle
-          echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
+          # CRITICAL FIX: Force Kotlin version in project build.gradle
+          sed -i 's/kotlin_version = .*/kotlin_version = "1.9.22"/' android/build.gradle
+          
+          # CRITICAL FIX: Force resolution of stdlib mismatch in app build.gradle
+          echo "configurations.all { resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.22' }" >> android/app/build.gradle
           
           cap sync android
 
       - name: Build Final APK
         run: |
           chmod +x android/gradlew
-          cd android && ./gradlew assembleDebug --no-daemon
-
+          cd android && ./gradlew assembleDebug --no-daemon -Pandroid.useAndroidX=true -Pandroid.enableJetifier=true
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
