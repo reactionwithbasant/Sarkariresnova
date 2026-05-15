@@ -9,174 +9,501 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: #0f172a; color: #f8fafc; min-height: 100vh; overflow-x: hidden; padding-bottom: 80px; }
+    
     .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
     .logo { font-size: 24px; font-weight: 800; background: linear-gradient(to right, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; text-align: center; }
-    .btn { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; }
-    .game-item { background: rgba(30,41,59,0.8); padding: 15px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
-    .section { display: none; }
-    .active-section { display: block; }
+    
+    .live-ticker { background: rgba(0, 0, 0, 0.8); color: #fbbf24; padding: 8px 0; font-size: 13px; font-weight: 600; border-bottom: 1px solid rgba(251, 191, 36, 0.2); display: flex; align-items: center; }
+    .live-ticker span { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 10px; margin: 0 10px; font-size: 11px; }
+
+    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
+    
+    .wallet-container { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    .wallet-box { flex: 1; padding: 10px; }
+    .wallet-box:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
+    .wallet-title { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
     .coin-val { font-size: 32px; font-weight: 800; color: #fbbf24; }
     .rupee-val { font-size: 32px; font-weight: 800; color: #4ade80; }
+    .timer-text { font-size: 10px; color: #38bdf8; margin-top: 5px; font-weight: bold; background: rgba(56, 189, 248, 0.1); padding: 3px 8px; border-radius: 8px; display: inline-block; }
+
+    .btn { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s; }
+    .btn:active { transform: scale(0.96); }
+    .btn-danger { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+    .btn-dark { background: rgba(255,255,255,0.1); }
+    .btn-gold { background: linear-gradient(135deg, #f59e0b, #d97706); display: none; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+    
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; }
+    .game-item { background: linear-gradient(145deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8)); padding: 15px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+    .game-icon { font-size: 40px; margin-bottom: 5px; }
+    
+    .game-board { margin: 20px 0; min-height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .slot-box { background: #1e293b; width: 60px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 35px; border: 2px solid #38bdf8; }
+    .coin { width: 80px; height: 80px; transition: transform 2s; transform-style: preserve-3d; border-radius: 50%; background: gold; display: flex; align-items: center; justify-content: center; font-size: 35px; color: #b45309; }
+    .spin-wheel { font-size: 80px; transition: transform 2s ease-out; }
+    .dice-icon { font-size: 80px; }
+    
+    .interactive-btn { background: #1e293b; border: 2px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; font-size: 30px; border-radius: 15px; cursor: pointer; margin: 5px; }
+    .scratch-area { background: #475569; width: 200px; height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 20px; font-weight: bold; cursor: pointer; border: 2px dashed #94a3b8; }
+    
+    .input-field { width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; outline: none; }
+    .section { display: none; }
+    .active-section { display: block; animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    #cooldownAlert { display: none; background: rgba(244, 63, 94, 0.1); color: #f43f5e; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-bottom: 15px; border: 1px solid rgba(244, 63, 94, 0.3); text-align: center; }
+    .daily-limit { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: bold; margin: 10px 20px; text-align: center; }
   </style>
 </head>
 <body>
 
-  <div class="navbar"><div class="logo">Ad2Win</div><div>👤 <span id="userName">User</span></div></div>
+  <div class="live-ticker">
+    <span>LIVE</span>
+    <marquee id="tickerText" scrollamount="5" behavior="scroll" direction="left">Loading withdrawals...</marquee>
+  </div>
+
+  <div class="navbar">
+    <div class="logo">Ad2Win</div>
+    <div style="font-size: 14px; font-weight: bold;">👤 <span id="userName">User</span></div>
+  </div>
 
   <div id="loginSection" class="section active-section">
     <div class="glass-card" style="margin-top: 50px;">
-      <h1>🪙</h1><h2>Ad2Win Login</h2>
-      <button class="btn" id="btnGoogleLogin" style="background:white; color:black;">Login with Google</button>
+      <h1 style="font-size: 50px;">🪙</h1>
+      <h2>Play & Earn Daily</h2>
+      <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">Powered by RAGHVITA ENTERPRISES</p>
+      <button class="btn" id="btnGoogleLogin" style="background: white; color: black; margin-top: 30px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width: 18px; vertical-align: middle; margin-right: 8px;" alt="G"> 
+        Login with Google
+      </button>
     </div>
   </div>
 
   <div id="dashboardSection" class="section">
-    <div class="glass-card">
-      <div style="display:flex; justify-content:space-around;">
-        <div><small>Coins</small><div class="coin-val" id="txtCoins">0</div></div>
-        <div><small>Balance</small><div class="rupee-val">₹<span id="txtRupees">0.00</span></div></div>
+    <div class="glass-card" style="margin-top: 10px; padding: 15px;">
+      <div class="wallet-container">
+        <div class="wallet-box">
+          <div class="wallet-title">Coins</div>
+          <div class="coin-val">🪙 <span id="txtCoins">0</span></div>
+          <div class="timer-text" id="txtConvertTimer">Calculating...</div>
+        </div>
+        <div class="wallet-box">
+          <div class="wallet-title">Main Balance</div>
+          <div class="rupee-val">₹ <span id="txtRupees">0.00</span></div>
+          <div style="font-size: 10px; color: #4ade80; margin-top: 5px;">Min Withdraw ₹100</div>
+        </div>
       </div>
-      <button class="btn" id="btnGoWithdraw">Withdraw</button>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button class="btn btn-danger" id="btnGoWithdraw" style="margin-top: 0;">Withdraw</button>
+        <button class="btn" id="btnGoRefer" style="margin-top: 0; background: #8b5cf6;">Refer & Earn</button>
+      </div>
     </div>
-    <h3 style="padding: 10px 20px;">10 Premium Games</h3>
+
+    <div class="daily-limit">🎯 Today's Remaining Plays: <span id="txtRemainingPlays">40</span>/40</div>
+    <div id="cooldownAlert" style="margin: 0 20px;">⏱️ Wait <span id="cooldownSeconds">60</span>s before playing again!</div>
+
+    <h3 style="padding: 10px 20px; font-size: 16px;">Top 10 Games</h3>
     <div class="grid" id="gamesGrid"></div>
+    
+    <div style="padding: 20px;">
+        <button class="btn btn-dark" id="btnGoHistory" style="margin-bottom: 10px;">📜 Transaction History</button>
+    </div>
   </div>
 
   <div id="gamePlaySection" class="section">
-    <div class="glass-card" style="margin-top: 40px;">
-      <h2 id="gameTitle">Game</h2>
-      <div id="gameBoard" style="margin: 20px 0; font-size: 50px;">🎮</div>
-      <h3 id="gameResultText"></h3>
-      <button class="btn" id="btnStartGame">▶ Play Now</button>
-      <button class="btn" id="btnClaimReward" style="display:none; background:gold; color:black;">📺 Watch Ad to Claim</button>
-      <button class="btn" onclick="location.reload()" style="margin-top:10px; background:gray;">Back</button>
+    <div id="activeGameContainer" class="glass-card" style="margin-top: 40px;">
+      <h2 id="gameTitle">Game Name</h2>
+      <p id="gameInstruction" style="font-size:12px; color:#94a3b8; margin-top:5px;"></p>
+      <div id="dynamicGameBoard" class="game-board"></div>
+      <h3 id="gameResultText" style="margin: 15px 0; min-height: 25px; font-size: 18px;"></h3>
+      <button class="btn" id="btnStartGameAction">▶ Play Now</button>
+      <button class="btn btn-gold" id="btnClaimReward">📺 Watch Ad to Claim</button>
+      <button class="btn btn-dark" id="btnLeaveGame" style="margin-top: 15px;">Back to Menu</button>
+    </div>
+  </div>
+
+  <div id="referSection" class="section">
+    <div class="glass-card" style="margin-top: 20px;">
+      <h1 style="font-size: 50px;">🎁</h1>
+      <h2>Refer & Earn</h2>
+      <p style="color: #94a3b8; font-size: 13px; margin: 10px 0;">Get ₹10 (1000 Coins) per friend, they get 500 Coins!</p>
+      <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; margin: 20px 0;">
+        <span style="font-size: 12px; color: #94a3b8;">Your Code:</span>
+        <h3 id="myReferCode" style="color: #38bdf8; letter-spacing: 2px; font-size: 24px;">LOADING</h3>
+      </div>
+      <button class="btn" id="btnShareRefer" style="background: #22c55e;">🚀 Share Link</button>
+      <hr style="border: 1px solid rgba(255,255,255,0.05); margin: 20px 0;">
+      <div id="referralInputArea">
+        <input type="text" id="inputReferCode" class="input-field" placeholder="Enter Friend's Code">
+        <button class="btn" id="btnApplyRefer">Apply Code</button>
+      </div>
+      <div id="referralSuccessArea" style="display:none; color:#4ade80; padding:15px;">✅ Referral Applied!</div>
+      <button class="btn btn-dark" id="btnBackFromRefer" style="margin-top: 20px;">Back</button>
+    </div>
+  </div>
+
+  <div id="withdrawSection" class="section">
+    <div class="glass-card">
+      <h2>Withdraw Balance</h2>
+      <p style="color: #f43f5e; font-size: 12px; margin-bottom: 10px;">Min ₹100 required.</p>
+      <input type="text" id="upiId" class="input-field" placeholder="Enter UPI ID">
+      <input type="number" id="withdrawAmount" class="input-field" placeholder="Amount (₹)">
+      <button class="btn btn-danger" id="btnSubmitWithdraw">Request Payout</button>
+      <button class="btn btn-dark" id="btnBackToDash2">Back</button>
+    </div>
+  </div>
+
+  <div id="historySection" class="section">
+    <div class="glass-card" style="padding: 15px;">
+      <h2>History</h2>
+      <div id="historyList" style="margin-top: 20px; font-size: 13px; text-align: left; max-height: 350px; overflow-y: auto;"></div>
+      <button class="btn btn-dark" id="btnBackToDash3" style="margin-top: 20px;">Back</button>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC5RgzMeAlQrbKbtcRvY7YgNKK59w2mT8s",
       authDomain: "raghvitamart.firebaseapp.com",
+      databaseURL: "https://raghvitamart-default-rtdb.firebaseio.com",
       projectId: "raghvitamart",
+      storageBucket: "raghvitamart.firebasestorage.app",
+      messagingSenderId: "849119353425",
       appId: "1:849119353425:web:cc2114ea115235cc43f670"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
+    
+    // --- ADMOB INITIALIZATION ---
     let AdMob = null;
-    let pendingCoins = 0;
-
-    // --- ADS LOGIC (Banner, Interstitial, Rewarded) ---
     async function initAds() {
-        if(window.Capacitor && window.Capacitor.Plugins.AdMob) {
+        if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
             AdMob = window.Capacitor.Plugins.AdMob;
-            await AdMob.initialize();
-            
-            // 1. BANNER AD (Hamesha dikhta rahega)
-            await AdMob.showBanner({
-                adId: 'ca-app-pub-3940256099942544/6300978111',
-                position: 'BOTTOM_CENTER',
-                margin: 60,
-                isTesting: true
-            });
+            try {
+                await AdMob.initialize();
+                console.log("AdMob Initialized Successfully");
+                
+                // 1. BANNER AD (Hamesha bottom mein dikhega)
+                await AdMob.showBanner({ 
+                    adId: 'ca-app-pub-3940256099942544/6300978111', 
+                    adSize: 'BANNER', 
+                    position: 'BOTTOM_CENTER', 
+                    isTesting: true,
+                    margin: 60
+                });
+
+                // REWARDED AD LISTENER (Coins add karne ke liye)
+                AdMob.addListener('onRewardedVideoAdRewarded', () => {
+                    processReward();
+                });
+
+            } catch(e) { console.error("AdMob Init Error: ", e); }
         }
     }
 
-    async function showInterstitial() {
-        if(AdMob) {
-            // 2. INTERSTITIAL AD (Game result ke baad)
-            await AdMob.prepareInterstitial({ adId: 'ca-app-pub-3940256099942544/1033173712', isTesting: true });
-            await AdMob.showInterstitial();
-        }
-    }
+    let currentUserUID = null, currentCoins = 0, currentRupees = 0.00;
+    let lastConversionTime = 0, conversionTimerInterval;
+    let userReferCode = "", currentGameObj = null, pendingReward = 0;
 
-    async function showRewarded() {
-        if(AdMob) {
-            // 3. REWARDED AD (Coins claim karne ke liye)
-            await AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true });
-            await AdMob.showRewardVideoAd();
-            
-            AdMob.addListener('onRewardedVideoAdRewarded', (info) => {
-                addCoinsToWallet(pendingCoins);
-                alert("Success! " + pendingCoins + " Coins added.");
-                location.reload();
-            });
-        } else {
-            // Testing on PC/Browser
-            addCoinsToWallet(pendingCoins);
-            location.reload();
-        }
-    }
+    const COINS_PER_RUPEE = 100; const CONVERT_TIME_MS = 24 * 60 * 60 * 1000; 
+    const WIN_AMOUNTS = [5, 10, 15, 20, 25, 50]; const CONSOLATION_PRIZE = 2; 
+    const DAILY_LIMIT = 40; let todayPlays = 0, lastGamePlayedTime = 0; 
 
-    // --- GAME & WALLET LOGIC ---
+    // --- 10 PREMIUM GAMES ---
     const GAMES = [
-        {id: 'slot', name: 'Slots', icon: '🎰'}, {id: 'coin', name: 'Coin Flip', icon: '🪙'},
-        {id: 'spin', name: 'Spin Wheel', icon: '🎡'}, {id: 'dice', name: 'Lucky Dice', icon: '🎲'},
-        {id: 'box', name: 'Mystery Box', icon: '🎁'}, {id: 'scratch', name: 'Scratch', icon: '🎫'},
-        {id: 'math', name: 'Math Quiz', icon: '🧮'}, {id: 'color', name: 'Color Guess', icon: '🎨'},
-        {id: 'rps', name: 'Rock Paper', icon: '✌️'}, {id: 'draw', name: 'Card Draw', icon: '🃏'}
+      { id: 'slot', name: 'Jackpot Slots', icon: '🎰', action: 'auto', desc: 'Click play to spin.' },
+      { id: 'coin', name: 'Coin Flip', icon: '🪙', action: 'auto', desc: 'Click play to flip.' },
+      { id: 'spin', name: 'Spin Wheel', icon: '🎡', action: 'auto', desc: 'Click play to spin.' },
+      { id: 'dice', name: 'Lucky Dice', icon: '🎲', action: 'auto', desc: 'Click play to roll.' },
+      { id: 'scratch', name: 'Scratch Card', icon: '🎫', action: 'manual', desc: 'Tap the gray box to scratch.' },
+      { id: 'box', name: 'Mystery Box', icon: '🎁', action: 'manual', desc: 'Choose a lucky box.' },
+      { id: 'color', name: 'Color Guess', icon: '🎨', action: 'manual', desc: 'Pick the winning color.' },
+      { id: 'math', name: 'Math Quiz', icon: '🧮', action: 'manual', desc: 'Select the correct answer.' },
+      { id: 'rps', name: 'Rock Paper', icon: '✌️', action: 'manual', desc: 'Choose your move.' },
+      { id: 'card', name: 'Card Draw', icon: '🃏', action: 'manual', desc: 'Draw a lucky card.' }
     ];
 
-    function renderGames() {
-        const grid = document.getElementById('gamesGrid');
-        GAMES.forEach(g => {
-            grid.innerHTML += `<div class="game-item" onclick="window.playGame('${g.name}')"><div>${g.icon}</div><div style="font-size:12px;">${g.name}</div></div>`;
-        });
-    }
-
-    window.playGame = (name) => {
-        document.getElementById('gameTitle').innerText = name;
-        document.getElementById('dashboardSection').style.display = 'none';
-        document.getElementById('gamePlaySection').style.display = 'block';
-    };
-
-    document.getElementById('btnStartGame').onclick = () => {
-        document.getElementById('btnStartGame').style.display = 'none';
-        document.getElementById('gameResultText').innerText = "Playing...";
-        
-        setTimeout(async () => {
-            pendingCoins = Math.floor(Math.random() * 50) + 10;
-            document.getElementById('gameResultText').innerText = "You Won " + pendingCoins + " Coins!";
-            document.getElementById('btnClaimReward').style.display = 'block';
-            
-            // Trigger Interstitial Ad here
-            await showInterstitial();
-        }, 2000);
-    };
-
-    document.getElementById('btnClaimReward').onclick = () => {
-        showRewarded();
-    };
-
-    async function addCoinsToWallet(amount) {
-        // Firebase update logic yahan aayega
-    }
-
-    // --- LOGIN LOGIC ---
-    document.getElementById('btnGoogleLogin').onclick = async () => {
-        const { GoogleAuth } = window.Capacitor.Plugins;
-        const googleUser = await GoogleAuth.signIn();
-        const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
-        await signInWithCredential(auth, credential);
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('userName').innerText = user.displayName.split(" ")[0];
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('dashboardSection').style.display = 'block';
-        renderGames();
-        initAds();
+    function generateTicker() {
+      const names = ["Rohit", "Priya", "Amit", "Rahul", "Neha", "Vikas", "Sneha", "Karan"];
+      const amounts = [100, 150, 200, 250, 500, 800, 1000];
+      let str = "";
+      for(let i=0; i<50; i++) {
+        str += `🎉 ${names[Math.floor(Math.random()*names.length)]} withdrew ₹${amounts[Math.floor(Math.random()*amounts.length)]} &nbsp;&nbsp;•&nbsp;&nbsp; `;
       }
+      document.getElementById('tickerText').innerHTML = str;
+    }
+
+    function renderGames() {
+      const grid = document.getElementById('gamesGrid');
+      grid.innerHTML = '';
+      GAMES.forEach(game => {
+        grid.innerHTML += `<div class="game-item" onclick="window.openGame('${game.id}')"><div class="game-icon">${game.icon}</div><div style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">${game.name}</div><button class="btn" style="padding: 6px; font-size: 12px; margin:0;">Play</button></div>`;
+      });
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active-section'));
+      document.getElementById(id).classList.add('active-section');
+    }
+
+    function updateBalanceUI() { 
+        document.getElementById('txtCoins').innerText = currentCoins; 
+        document.getElementById('txtRupees').innerText = currentRupees.toFixed(2);
+        document.getElementById('txtRemainingPlays').innerText = (DAILY_LIMIT - todayPlays);
+    }
+
+    function getTodayDateStr() { let d = new Date(); return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
+
+    async function handleAutoConversion() {
+        const now = Date.now();
+        if (now - lastConversionTime >= CONVERT_TIME_MS) {
+            if (currentCoins > 0) {
+                let rupeesToAdd = currentCoins / COINS_PER_RUPEE;
+                currentRupees += rupeesToAdd;
+                await addDoc(collection(db, "ad2win_history"), { userId: currentUserUID, amount: rupeesToAdd, type: "Auto Converted to ₹", date: new Date().toISOString() });
+                alert(`🎉 ${currentCoins} Coins Auto-converted to ₹${rupeesToAdd.toFixed(2)}.`);
+            }
+            currentCoins = 0; lastConversionTime = now;
+            await updateDoc(doc(db, "ad2win_users", currentUserUID), { walletCoins: currentCoins, walletRupees: currentRupees, lastConversionTime: lastConversionTime });
+            updateBalanceUI();
+        }
+    }
+
+    function startConversionTimer() {
+        if(conversionTimerInterval) clearInterval(conversionTimerInterval);
+        conversionTimerInterval = setInterval(() => {
+            let timeLeft = CONVERT_TIME_MS - (Date.now() - lastConversionTime);
+            if (timeLeft <= 0) {
+                document.getElementById('txtConvertTimer').innerText = "Converting..."; handleAutoConversion(); 
+            } else {
+                let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('txtConvertTimer').innerText = `Converts in: ${hours}h ${minutes}m`;
+            }
+        }, 1000); 
+    }
+
+    // --- NATIVE GOOGLE LOGIN (CRASH PROOF) ---
+    document.getElementById('btnGoogleLogin').onclick = async () => {
+        const btn = document.getElementById('btnGoogleLogin');
+        btn.innerText = "Opening Secure Login...";
+        try { 
+            if (window.Capacitor && window.Capacitor.Plugins.GoogleAuth) {
+                await window.Capacitor.Plugins.GoogleAuth.initialize({
+                  clientId: '849119353425-66779v86p8r8idpuk5u6mhk42p55q20j.apps.googleusercontent.com',
+                  scopes: ['profile', 'email'],
+                  grantOfflineAccess: true,
+                });
+                
+                const googleUser = await window.Capacitor.Plugins.GoogleAuth.signIn();
+                const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+                await signInWithCredential(auth, credential);
+            } else {
+                alert("App is running in web browser. Please use the APK for Native Login.");
+                btn.innerHTML = `<img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width: 18px; vertical-align: middle; margin-right: 8px;"> Login with Google`; 
+            }
+        } 
+        catch (err) { 
+            console.error(err);
+            alert("Login Cancelled"); 
+            btn.innerHTML = `<img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width: 18px; vertical-align: middle; margin-right: 8px;"> Login with Google`; 
+        }
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUserUID = user.uid;
+        document.getElementById('userName').innerText = user.displayName ? user.displayName.split(" ")[0] : "User";
+        userReferCode = user.uid.substring(0, 6).toUpperCase(); 
+        document.getElementById('myReferCode').innerText = userReferCode;
+        
+        const userRef = doc(db, "ad2win_users", user.uid);
+        const docSnap = await getDoc(userRef);
+        const today = getTodayDateStr();
+
+        if (!docSnap.exists()) {
+          await setDoc(userRef, { name: user.displayName, walletCoins: 0, walletRupees: 0.00, lastConversionTime: Date.now(), referCode: userReferCode, referredBy: null, lastPlayDate: today, playsToday: 0 });
+          currentCoins = 0; currentRupees = 0; lastConversionTime = Date.now(); todayPlays = 0;
+        } else {
+          let data = docSnap.data();
+          currentCoins = data.walletCoins || 0; currentRupees = data.walletRupees || 0.00; lastConversionTime = data.lastConversionTime || Date.now();
+          if(data.lastPlayDate !== today) { todayPlays = 0; await updateDoc(userRef, { lastPlayDate: today, playsToday: 0 }); } else { todayPlays = data.playsToday || 0; }
+          if(data.referredBy) { document.getElementById('referralInputArea').style.display = 'none'; document.getElementById('referralSuccessArea').style.display = 'block'; }
+        }
+        
+        await handleAutoConversion(); startConversionTimer(); updateBalanceUI(); generateTicker(); renderGames(); 
+        showSection('dashboardSection');
+        
+        // Login hone ke baad Ads chalu karein
+        initAds();
+      } else { showSection('loginSection'); }
     });
+
+    // --- GAMEPLAY LOGIC ---
+    window.openGame = function(gameId) {
+      if(todayPlays >= DAILY_LIMIT) return alert(`🛑 Daily Limit Reached! Aaj ke games khatam hue.`);
+      const now = Date.now();
+      if(now - lastGamePlayedTime < 60000) {
+          document.getElementById('cooldownAlert').style.display = 'block'; document.getElementById('cooldownSeconds').innerText = Math.ceil((60000 - (now - lastGamePlayedTime)) / 1000);
+          setTimeout(() => document.getElementById('cooldownAlert').style.display = 'none', 3000); return;
+      }
+      currentGameObj = GAMES.find(g => g.id === gameId);
+      document.getElementById('gameTitle').innerText = currentGameObj.name;
+      document.getElementById('gameInstruction').innerText = currentGameObj.desc;
+      document.getElementById('gameResultText').innerText = '';
+      document.getElementById('btnClaimReward').style.display = 'none';
+      document.getElementById('btnClaimReward').disabled = false;
+      pendingReward = 0;
+      
+      const board = document.getElementById('dynamicGameBoard');
+      const playBtn = document.getElementById('btnStartGameAction');
+      board.innerHTML = ''; board.style.pointerEvents = 'auto'; 
+
+      if(currentGameObj.id === 'slot') { board.innerHTML = `<div class="slot-box" id="s1">🍒</div><div class="slot-box" id="s2">🍋</div><div class="slot-box" id="s3">🔔</div>`; playBtn.style.display = 'block'; }
+      else if(currentGameObj.id === 'coin') { board.innerHTML = `<div class="coin" id="c1">🪙</div>`; playBtn.style.display = 'block'; }
+      else if(currentGameObj.id === 'spin') { board.innerHTML = `<div class="spin-wheel" id="w1">🎡</div>`; playBtn.style.display = 'block'; }
+      else if(currentGameObj.id === 'dice') { board.innerHTML = `<div class="dice-icon" id="d1">⚀</div>`; playBtn.style.display = 'block'; }
+      else if(currentGameObj.id === 'scratch') { board.innerHTML = `<div class="scratch-area manual-btn">Tap to Scratch</div>`; playBtn.style.display = 'none'; }
+      else if(currentGameObj.id === 'box') { board.innerHTML = `<div class="interactive-btn manual-btn">🎁</div><div class="interactive-btn manual-btn">🎁</div><div class="interactive-btn manual-btn">🎁</div>`; playBtn.style.display = 'none'; }
+      else if(currentGameObj.id === 'color') { board.innerHTML = `<div class="interactive-btn manual-btn" style="background:#ef4444">🔴</div><div class="interactive-btn manual-btn" style="background:#22c55e">🟢</div><div class="interactive-btn manual-btn" style="background:#3b82f6">🔵</div>`; playBtn.style.display = 'none'; }
+      else if(currentGameObj.id === 'math') { board.innerHTML = `<div style="width:100%"><div style="font-size:24px; margin-bottom:15px;">2 + 2 = ?</div><button class="interactive-btn manual-btn" data-win="true">4</button><button class="interactive-btn manual-btn" data-win="false">5</button></div>`; playBtn.style.display = 'none'; }
+      else if(currentGameObj.id === 'rps') { board.innerHTML = `<div class="interactive-btn manual-btn">✊</div><div class="interactive-btn manual-btn">✋</div><div class="interactive-btn manual-btn">✌️</div>`; playBtn.style.display = 'none'; }
+      else if(currentGameObj.id === 'card') { board.innerHTML = `<div class="interactive-btn manual-btn">🂠</div><div class="interactive-btn manual-btn">🂠</div><div class="interactive-btn manual-btn">🂠</div>`; playBtn.style.display = 'none'; }
+
+      setTimeout(() => { document.querySelectorAll('.manual-btn').forEach(btn => { btn.onclick = function() { window.processGameLogic(true, this.getAttribute('data-win')==="true"?true:null, this); }; }); }, 100);
+      showSection('gamePlaySection');
+    }
+
+    document.getElementById('btnStartGameAction').onclick = () => {
+      document.getElementById('btnStartGameAction').style.display = 'none';
+      let isWin = Math.random() > 0.6; 
+      if(currentGameObj.id === 'slot') {
+        let t=0, int = setInterval(()=>{ ['s1','s2','s3'].forEach(id => document.getElementById(id).innerText = ['🍒','🍋','💎'][Math.floor(Math.random()*3)]); if(++t>15){ clearInterval(int); if(isWin){let e='💎';['s1','s2','s3'].forEach(id=>document.getElementById(id).innerText=e);} window.processGameLogic(false, isWin); } }, 100);
+      } else if(currentGameObj.id === 'coin') {
+        document.getElementById('c1').style.transform = `rotateY(${isWin?1080:1260}deg)`; setTimeout(() => { document.getElementById('c1').innerText = isWin?"Win":"Loss"; window.processGameLogic(false, isWin); }, 2000);
+      } else if(currentGameObj.id === 'spin') {
+        document.getElementById('w1').style.transform = `rotate(${Math.floor(Math.random()*1000)+1000}deg)`; setTimeout(() => window.processGameLogic(false, isWin), 2000);
+      } else if(currentGameObj.id === 'dice') {
+        let d=['⚀','⚁','⚂','⚃','⚄','⚅'], t=0, int=setInterval(()=>{ document.getElementById('d1').innerText=d[Math.floor(Math.random()*6)]; if(++t>15){ clearInterval(int); document.getElementById('d1').innerText=isWin?'⚅':'⚀'; window.processGameLogic(false, isWin); } }, 100);
+      }
+    };
+
+    window.processGameLogic = async function(isManualInteraction, forceWin = null, clickedEl = null) {
+      if(isManualInteraction) document.getElementById('dynamicGameBoard').style.pointerEvents = 'none'; 
+      let isWin = forceWin !== null ? forceWin : Math.random() > 0.6; 
+      if(clickedEl) clickedEl.innerText = isWin ? "💎 Win" : "💨 Loss";
+
+      // 2. INTERSTITIAL AD (Game ka result aate hi full screen ad)
+      if(AdMob) { 
+          try { 
+              await AdMob.prepareInterstitial({ adId: 'ca-app-pub-3940256099942544/1033173712', isTesting: true }); 
+              await AdMob.showInterstitial(); 
+          } catch(e){ console.log("Interstitial Error", e); } 
+      }
+
+      setTimeout(() => {
+        const btnClaim = document.getElementById('btnClaimReward');
+        const resText = document.getElementById('gameResultText');
+        if(isWin) { pendingReward = WIN_AMOUNTS[Math.floor(Math.random() * WIN_AMOUNTS.length)]; resText.innerHTML = `🎉 Won <b>${pendingReward} Coins</b>!`; resText.style.color = "#fbbf24"; }
+        else { pendingReward = CONSOLATION_PRIZE; resText.innerHTML = `😢 Loss! Consolation: <b>${CONSOLATION_PRIZE} Coins</b>`; resText.style.color = "#f43f5e"; }
+        btnClaim.innerText = `📺 Watch Ad to Claim ${pendingReward} Coins`; btnClaim.style.display = 'block';
+      }, isManualInteraction ? 800 : 0);
+    };
+
+    document.getElementById('btnClaimReward').onclick = async () => {
+      document.getElementById('btnClaimReward').disabled = true; 
+      
+      // 3. REWARDED VIDEO AD (Claim button click karne par)
+      if(AdMob) { 
+          try { 
+              await AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true }); 
+              await AdMob.showRewardVideoAd(); 
+              // AdMob Listener will call processReward() when ad is completed
+              return;
+          } catch(e){ 
+              console.log("Rewarded Ad Failed: ", e); 
+              processReward(); // Fallback agar ad fail ho jaye
+          } 
+      } else {
+          // PC Browser Testing fallback
+          processReward(); 
+      }
+    };
+
+    async function processReward() {
+      if(pendingReward <= 0) return; 
+      let wonCoins = pendingReward; pendingReward = 0; 
+      currentCoins += wonCoins; todayPlays += 1; lastGamePlayedTime = Date.now(); 
+      updateBalanceUI();
+      try {
+        await updateDoc(doc(db, "ad2win_users", currentUserUID), { walletCoins: currentCoins, playsToday: todayPlays, lastPlayDate: getTodayDateStr() });
+        await addDoc(collection(db, "ad2win_history"), { userId: currentUserUID, amount: wonCoins, type: "Win (Coins)", game: currentGameObj.name, date: new Date().toISOString() });
+        alert(`✅ ${wonCoins} Coins added!`);
+      } catch(e) {}
+      showSection('dashboardSection');
+    }
+
+    // --- WITHDRAW, REFER, HISTORY ---
+    document.getElementById('btnGoWithdraw').onclick = () => showSection('withdrawSection');
+    document.getElementById('btnGoRefer').onclick = () => showSection('referSection');
+    document.getElementById('btnLeaveGame').onclick = () => showSection('dashboardSection');
+    ['btnBackToDash2', 'btnBackToDash3', 'btnBackFromRefer'].forEach(id => document.getElementById(id).onclick = () => showSection('dashboardSection'));
+
+    document.getElementById('btnShareRefer').onclick = () => {
+      const txt = `Play Games & Win Daily on Ad2Win!\n\nUse Code: *${userReferCode}* to get 500 Coins Instantly.\n\nDownload Now!`;
+      if (navigator.share) navigator.share({ title: 'Ad2Win', text: txt }).catch(e=>e); else alert("Copy this:\n\n" + txt);
+    };
+
+    document.getElementById('btnApplyRefer').onclick = async () => {
+        const code = document.getElementById('inputReferCode').value.trim().toUpperCase();
+        if(!code || code === userReferCode) return alert("Please enter a valid friend's code.");
+        
+        const snap = await getDocs(query(collection(db, "ad2win_users"), where("referCode", "==", code)));
+        if(snap.empty) return alert("Invalid Referral Code!");
+
+        let referrerId = snap.docs[0].id;
+        let referrerData = snap.docs[0].data();
+        let referrerCoins = referrerData.walletCoins || 0;
+
+        currentCoins += 500; updateBalanceUI();
+        await updateDoc(doc(db, "ad2win_users", currentUserUID), { walletCoins: currentCoins, referredBy: code });
+        await addDoc(collection(db, "ad2win_history"), { userId: currentUserUID, amount: 500, type: "Refer Bonus (Coins)", date: new Date().toISOString() });
+        
+        await updateDoc(doc(db, "ad2win_users", referrerId), { walletCoins: referrerCoins + 1000 });
+        await addDoc(collection(db, "ad2win_history"), { userId: referrerId, amount: 1000, type: "Friend Joined (Coins)", date: new Date().toISOString() });
+
+        document.getElementById('referralInputArea').style.display = 'none';
+        document.getElementById('referralSuccessArea').style.display = 'block';
+        alert("🎉 Code Applied! 500 Coins added to your wallet.");
+    };
+
+    document.getElementById('btnSubmitWithdraw').onclick = async () => {
+      const wAmt = parseFloat(document.getElementById('withdrawAmount').value);
+      if(currentRupees < 100 || wAmt < 100) return alert(`❌ Minimum withdraw is ₹100.`);
+      if(wAmt > currentRupees) return alert(`❌ Insufficient Main Balance!`);
+      currentRupees -= wAmt; updateBalanceUI();
+      await updateDoc(doc(db, "ad2win_users", currentUserUID), { walletRupees: currentRupees });
+      await addDoc(collection(db, "ad2win_history"), { userId: currentUserUID, amount: wAmt, type: "Withdraw (₹)", date: new Date().toISOString() });
+      alert("✅ Withdrawal Request Sent successfully!"); showSection('dashboardSection');
+    };
+
+    document.getElementById('btnGoHistory').onclick = async () => {
+      showSection('historySection'); const hDiv = document.getElementById('historyList'); hDiv.innerHTML = "Loading...";
+      const snap = await getDocs(query(collection(db, "ad2win_history"), where("userId", "==", currentUserUID)));
+      if(snap.empty) { hDiv.innerHTML = "No transactions yet."; return; }
+      let hist = []; snap.forEach(d => hist.push(d.data())); hist.sort((a,b) => new Date(b.date) - new Date(a.date)); hDiv.innerHTML = "";
+      hist.forEach(data => {
+          let isWin = data.type.includes("Withdraw") === false;
+          let symbol = data.type.includes("₹") ? "₹" : "🪙";
+          hDiv.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 8px; display:flex; justify-content: space-between;"><div><strong>${data.type}</strong><br><small style="color:#94a3b8;">${new Date(data.date).toLocaleDateString()}</small></div><div style="color: ${isWin?'#4ade80':'#f43f5e'}; font-weight: bold;">${isWin?'+':'-'}${symbol}${data.amount}</div></div>`;
+      });
+    };
   </script>
 </body>
 </html>
