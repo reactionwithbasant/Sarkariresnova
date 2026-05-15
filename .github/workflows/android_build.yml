@@ -14,38 +14,36 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Tools
+      - name: Install Capacitor
         run: npm install -g @capacitor/cli
 
-      - name: Setup Project
+      - name: Setup Project & Sync
         run: |
           npm install @capacitor/core @capacitor/android --force
           mkdir -p www
-          # Sirf index.html copy karein (main.js ki zarurat nahi hai)
           cp index.html www/
           
-          # Force a clean capacitor config
           echo '{"appId":"com.raghvita.ad2win","appName":"Ad2Win","webDir":"www"}' > capacitor.config.json
           
           rm -rf android
           cap add android
           
-          # Mandatory fixes for modern Gradle
-          sed -i 's/kotlin_version = .*/kotlin_version = "1.9.20"/' android/build.gradle
+          # Stable Kotlin & Gradle Fix
+          sed -i 's/kotlin_version = .*/kotlin_version = "1.9.10"/' android/build.gradle
           echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
           
-          # Google Services update
+          # Copy google-services.json if it exists in the root
           if [ -f "google-services.json" ]; then
             cp google-services.json android/app/
           fi
           
           cap sync android
 
-      - name: Build APK
+      - name: Build APK with Stacktrace
         run: |
           chmod +x android/gradlew
-          cd android && ./gradlew assembleDebug --no-daemon
-
+          cd android && ./gradlew assembleDebug --stacktrace --no-daemon
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
