@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com; connect-src * 'unsafe-inline' https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com; img-src * data: blob: 'unsafe-inline'; frame-src *;">
-  <title>Ad2Win | Powered by RAGHVITA ENTERPRISES</title>
+  <title>Ad2Win | FBG FEEDS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -71,7 +71,6 @@
     <div class="glass-card" style="margin-top: 50px;">
       <h1 style="font-size: 50px;">🪙</h1>
       <h2>Play & Earn Daily</h2>
-      <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">Powered by RAGHVITA ENTERPRISES</p>
       <button class="btn" id="btnGoogleLogin" style="background: white; color: black; margin-top: 30px;">Login with Google</button>
     </div>
   </div>
@@ -160,8 +159,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    // Fixed: Using signInWithRedirect perfectly aligned with our new build workflow
-    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // CHANGED: Added setPersistence and browserLocalPersistence to prevent session dropping
+    import { getAuth, GoogleAuthProvider, signInWithPopup, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -185,7 +184,6 @@
     if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
         AdMob = window.Capacitor.Plugins.AdMob;
         AdMob.initialize().catch(e => console.log("AdMob Init Error: ", e));
-        // Show Banner Ad continually at the bottom
         AdMob.showBanner({ adId: 'ca-app-pub-3940256099942544/6300978111', adSize: 'BANNER', position: 'BOTTOM_CENTER', isTesting: true }).catch(e=>e);
     }
 
@@ -271,17 +269,21 @@
     }
 
     // --- AUTHENTICATION LOGIC ---
-    // Handle redirect result seamlessly
-    getRedirectResult(auth).catch((error) => {
-        if(error.code !== "auth/operation-not-supported-in-this-environment") {
-            alert("Redirect Error: " + error.message);
-        }
-    });
-
     document.getElementById('btnGoogleLogin').onclick = async () => {
-        document.getElementById('btnGoogleLogin').innerText = "Redirecting... Please Wait";
-        try { await signInWithRedirect(auth, provider); } 
-        catch (err) { alert("Login Error: " + err.message); document.getElementById('btnGoogleLogin').innerText = "Login with Google"; }
+        const btn = document.getElementById('btnGoogleLogin');
+        btn.innerText = "Opening Login...";
+        try { 
+            // Setting persistence to explicitly prevent the missing state error
+            await setPersistence(auth, browserLocalPersistence);
+            // Calling Popup (Cordova InAppBrowser will handle this smoothly now)
+            await signInWithPopup(auth, provider); 
+        } 
+        catch (err) { 
+            if (err.code !== "auth/popup-closed-by-user") {
+                alert("Login Error: " + err.message); 
+            }
+            btn.innerText = "Login with Google"; 
+        }
     };
 
     onAuthStateChanged(auth, async (user) => {
@@ -363,7 +365,7 @@
       let isWin = forceWin !== null ? forceWin : Math.random() > 0.6; 
       if(clickedEl) clickedEl.innerText = isWin ? "💎 Win" : "💨 Loss";
 
-      // Interstitial Ad (Game result aane par)
+      // Interstitial Ad
       if(AdMob) { try { await AdMob.prepareInterstitial({ adId: 'ca-app-pub-3940256099942544/1033173712', isTesting: true }); await AdMob.showInterstitial(); } catch(e){} }
 
       setTimeout(() => {
@@ -377,17 +379,15 @@
 
     document.getElementById('btnClaimReward').onclick = async () => {
       document.getElementById('btnClaimReward').disabled = true; 
-      // Rewarded Video Ad (Claim karne par)
+      // Rewarded Video Ad
       if(AdMob) { 
           try { 
               await AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true }); 
               await AdMob.showRewardVideoAd(); 
-              // Ad poora dekhne par reward logic chalega
               AdMob.addListener('onRewardedVideoAdRewarded', processReward); 
               return;
           } catch(e){ console.log("Ad Failed: ", e); } 
       }
-      // Fallback agar AdMob initialize nahi hua (jaise PC pe test karte waqt)
       setTimeout(processReward, 1000); 
     };
 
