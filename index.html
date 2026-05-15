@@ -189,7 +189,7 @@
                 await AdMob.initialize();
                 console.log("AdMob Initialized Successfully");
                 
-                // 1. BANNER AD (Hamesha bottom mein dikhega)
+                // 1. BANNER AD
                 await AdMob.showBanner({ 
                     adId: 'ca-app-pub-3940256099942544/6300978111', 
                     adSize: 'BANNER', 
@@ -198,7 +198,7 @@
                     margin: 60
                 });
 
-                // REWARDED AD LISTENER (Coins add karne ke liye)
+                // REWARDED AD LISTENER
                 AdMob.addListener('onRewardedVideoAdRewarded', () => {
                     processReward();
                 });
@@ -289,14 +289,14 @@
         }, 1000); 
     }
 
-    // --- NATIVE GOOGLE LOGIN (CRASH PROOF) ---
+    // --- NATIVE GOOGLE LOGIN (CRASH PROOF + CORRECT ID) ---
     document.getElementById('btnGoogleLogin').onclick = async () => {
         const btn = document.getElementById('btnGoogleLogin');
         btn.innerText = "Opening Secure Login...";
         try { 
             if (window.Capacitor && window.Capacitor.Plugins.GoogleAuth) {
                 await window.Capacitor.Plugins.GoogleAuth.initialize({
-                  clientId: '849119353425-66779v86p8r8idpuk5u6mhk42p55q20j.apps.googleusercontent.com',
+                  clientId: '849119353425-da1h69vsf869t9ltf6umifkfqtuvfjae.apps.googleusercontent.com',
                   scopes: ['profile', 'email'],
                   grantOfflineAccess: true,
                 });
@@ -340,7 +340,7 @@
         await handleAutoConversion(); startConversionTimer(); updateBalanceUI(); generateTicker(); renderGames(); 
         showSection('dashboardSection');
         
-        // Login hone ke baad Ads chalu karein
+        // Ads Initialization
         initAds();
       } else { showSection('loginSection'); }
     });
