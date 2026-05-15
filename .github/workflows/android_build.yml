@@ -14,7 +14,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # FIXED KEYSTORE: Taaki SHA-1 baar-baar na badle
       - name: Cache Keystore
         uses: actions/cache@v4
         with:
@@ -33,13 +32,11 @@ jobs:
 
       - name: Setup Project & Plugins
         run: |
-          # Sabhi ads aur login plugins ek sath --force se install ho rahe hain
           npm install @capacitor/core @capacitor/android @codetrix-studio/capacitor-google-auth @capacitor-community/admob --force
           
           mkdir -p www
           cp index.html www/
           
-          # Capacitor Config Setup
           cat <<EOF > capacitor.config.json
           {
             "appId": "com.raghvita.ad2win",
@@ -58,16 +55,16 @@ jobs:
           rm -rf android
           cap add android
           
-          # COPY JSON: Isse Firebase activate hoga
           if [ -f "google-services.json" ]; then
             cp google-services.json android/app/
           fi
           
-          # ADS SETUP: Strings.xml mein AdMob Test App ID aur Google Client ID
-          # (Iske bina Ads bilkul nahi chalte)
-          echo '<?xml version="1.0" encoding="utf-8"?><resources><string name="server_client_id">849119353425-66779v86p8r8idpuk5u6mhk42p55q20j.apps.googleusercontent.com</string><string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string></resources>' > android/app/src/main/res/values/strings.xml
+          # YAHAN FIX HAI: Ab hum original file delete nahi kar rahe, balki custom file bana rahe hain
+          echo '<?xml version="1.0" encoding="utf-8"?><resources><string name="server_client_id">849119353425-66779v86p8r8idpuk5u6mhk42p55q20j.apps.googleusercontent.com</string><string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string></resources>' > android/app/src/main/res/values/custom_strings.xml
           
-          # Gradle aur Kotlin fixes
+          # AdMob ko Android ke dil (Manifest) mein jod rahe hain taaki crash na ho
+          sed -i '/<application/a \        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="@string/admob_app_id"/>' android/app/src/main/AndroidManifest.xml
+          
           echo "configurations.all { resolutionStrategy { force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22' } }" >> android/app/build.gradle
           echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
           
