@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com; connect-src * 'unsafe-inline' https://*.firebaseio.com https://*.googleapis.com; img-src * data: blob: 'unsafe-inline'; frame-src *;">
-  <title>Ad2Win | FBG FEEDS</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com; connect-src * 'unsafe-inline' https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com; img-src * data: blob: 'unsafe-inline'; frame-src *;">
+  <title>Ad2Win | Powered by RAGHVITA ENTERPRISES</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -37,13 +37,13 @@
     .game-item { background: linear-gradient(145deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8)); padding: 15px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
     .game-icon { font-size: 40px; margin-bottom: 5px; }
     
-    .game-board { margin: 20px 0; min-height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .game-board { margin: 20px 0; min-height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
     .slot-box { background: #1e293b; width: 60px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 35px; border: 2px solid #38bdf8; }
     .coin { width: 80px; height: 80px; transition: transform 2s; transform-style: preserve-3d; border-radius: 50%; background: gold; display: flex; align-items: center; justify-content: center; font-size: 35px; color: #b45309; }
     .spin-wheel { font-size: 80px; transition: transform 2s ease-out; }
     .dice-icon { font-size: 80px; }
     
-    .interactive-btn { background: #1e293b; border: 2px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; font-size: 30px; border-radius: 15px; cursor: pointer; }
+    .interactive-btn { background: #1e293b; border: 2px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; font-size: 30px; border-radius: 15px; cursor: pointer; margin: 5px; }
     .scratch-area { background: #475569; width: 200px; height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 20px; font-weight: bold; cursor: pointer; border: 2px dashed #94a3b8; }
     
     .input-field { width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; outline: none; }
@@ -71,6 +71,7 @@
     <div class="glass-card" style="margin-top: 50px;">
       <h1 style="font-size: 50px;">🪙</h1>
       <h2>Play & Earn Daily</h2>
+      <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">Powered by RAGHVITA ENTERPRISES</p>
       <button class="btn" id="btnGoogleLogin" style="background: white; color: black; margin-top: 30px;">Login with Google</button>
     </div>
   </div>
@@ -122,7 +123,7 @@
     <div class="glass-card" style="margin-top: 20px;">
       <h1 style="font-size: 50px;">🎁</h1>
       <h2>Refer & Earn</h2>
-      <p style="color: #94a3b8; font-size: 13px; margin: 10px 0;">Get ₹10 (1000 Coins) per friend!</p>
+      <p style="color: #94a3b8; font-size: 13px; margin: 10px 0;">Get ₹10 (1000 Coins) per friend, they get 500 Coins!</p>
       <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; margin: 20px 0;">
         <span style="font-size: 12px; color: #94a3b8;">Your Code:</span>
         <h3 id="myReferCode" style="color: #38bdf8; letter-spacing: 2px; font-size: 24px;">LOADING</h3>
@@ -159,7 +160,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // Fixed: Using signInWithRedirect perfectly aligned with our new build workflow
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -176,13 +178,14 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
     
     // Capacitor AdMob Setup
     let AdMob = null;
     if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
         AdMob = window.Capacitor.Plugins.AdMob;
-        AdMob.initialize().catch(e => console.log(e));
-        // Banner Ad (Test ID)
+        AdMob.initialize().catch(e => console.log("AdMob Init Error: ", e));
+        // Show Banner Ad continually at the bottom
         AdMob.showBanner({ adId: 'ca-app-pub-3940256099942544/6300978111', adSize: 'BANNER', position: 'BOTTOM_CENTER', isTesting: true }).catch(e=>e);
     }
 
@@ -267,16 +270,24 @@
         }, 1000); 
     }
 
-    // AUTH LOGIC
+    // --- AUTHENTICATION LOGIC ---
+    // Handle redirect result seamlessly
+    getRedirectResult(auth).catch((error) => {
+        if(error.code !== "auth/operation-not-supported-in-this-environment") {
+            alert("Redirect Error: " + error.message);
+        }
+    });
+
     document.getElementById('btnGoogleLogin').onclick = async () => {
-        try { await signInWithPopup(auth, provider); } 
-        catch (err) { if (err.code !== "auth/popup-closed-by-user") alert("Login Error: " + err.message); }
+        document.getElementById('btnGoogleLogin').innerText = "Redirecting... Please Wait";
+        try { await signInWithRedirect(auth, provider); } 
+        catch (err) { alert("Login Error: " + err.message); document.getElementById('btnGoogleLogin').innerText = "Login with Google"; }
     };
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUserUID = user.uid;
-        document.getElementById('userName').innerText = user.displayName.split(" ")[0];
+        document.getElementById('userName').innerText = user.displayName ? user.displayName.split(" ")[0] : "User";
         userReferCode = user.uid.substring(0, 6).toUpperCase(); 
         document.getElementById('myReferCode').innerText = userReferCode;
         
@@ -298,9 +309,9 @@
       } else { showSection('loginSection'); }
     });
 
-    // GAME LOGIC
+    // --- GAME LOGIC ---
     window.openGame = function(gameId) {
-      if(todayPlays >= DAILY_LIMIT) return alert(`🛑 Daily Limit Reached!`);
+      if(todayPlays >= DAILY_LIMIT) return alert(`🛑 Daily Limit Reached! Aaj ke games khatam hue.`);
       const now = Date.now();
       if(now - lastGamePlayedTime < 60000) {
           document.getElementById('cooldownAlert').style.display = 'block'; document.getElementById('cooldownSeconds').innerText = Math.ceil((60000 - (now - lastGamePlayedTime)) / 1000);
@@ -352,7 +363,7 @@
       let isWin = forceWin !== null ? forceWin : Math.random() > 0.6; 
       if(clickedEl) clickedEl.innerText = isWin ? "💎 Win" : "💨 Loss";
 
-      // Interstitial Ad (Test ID)
+      // Interstitial Ad (Game result aane par)
       if(AdMob) { try { await AdMob.prepareInterstitial({ adId: 'ca-app-pub-3940256099942544/1033173712', isTesting: true }); await AdMob.showInterstitial(); } catch(e){} }
 
       setTimeout(() => {
@@ -366,12 +377,18 @@
 
     document.getElementById('btnClaimReward').onclick = async () => {
       document.getElementById('btnClaimReward').disabled = true; 
-      // Rewarded Ad (Test ID)
+      // Rewarded Video Ad (Claim karne par)
       if(AdMob) { 
-          try { await AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true }); await AdMob.showRewardVideoAd(); AdMob.addListener('onRewardedVideoAdRewarded', processReward); return;} 
-          catch(e){} 
+          try { 
+              await AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true }); 
+              await AdMob.showRewardVideoAd(); 
+              // Ad poora dekhne par reward logic chalega
+              AdMob.addListener('onRewardedVideoAdRewarded', processReward); 
+              return;
+          } catch(e){ console.log("Ad Failed: ", e); } 
       }
-      setTimeout(processReward, 1000); // Fallback if ad fails
+      // Fallback agar AdMob initialize nahi hua (jaise PC pe test karte waqt)
+      setTimeout(processReward, 1000); 
     };
 
     async function processReward() {
@@ -387,25 +404,48 @@
       showSection('dashboardSection');
     }
 
-    // OTHERS: Withdraw, Refer, History
+    // --- OTHER UI INTERACTIONS ---
     document.getElementById('btnGoWithdraw').onclick = () => showSection('withdrawSection');
     document.getElementById('btnGoRefer').onclick = () => showSection('referSection');
     document.getElementById('btnLeaveGame').onclick = () => showSection('dashboardSection');
     ['btnBackToDash2', 'btnBackToDash3', 'btnBackFromRefer'].forEach(id => document.getElementById(id).onclick = () => showSection('dashboardSection'));
 
     document.getElementById('btnShareRefer').onclick = () => {
-      const txt = `Play & Win Daily on Ad2Win! Use Code: *${userReferCode}*`;
-      if (navigator.share) navigator.share({ title: 'Ad2Win', text: txt }).catch(e=>e); else alert("Copy this: " + txt);
+      const txt = `Play Games & Win Daily on Ad2Win!\n\nUse Code: *${userReferCode}* to get 500 Coins Instantly.\n\nDownload Now!`;
+      if (navigator.share) navigator.share({ title: 'Ad2Win', text: txt }).catch(e=>e); else alert("Copy this:\n\n" + txt);
+    };
+
+    document.getElementById('btnApplyRefer').onclick = async () => {
+        const code = document.getElementById('inputReferCode').value.trim().toUpperCase();
+        if(!code || code === userReferCode) return alert("Please enter a valid friend's code.");
+        
+        const snap = await getDocs(query(collection(db, "ad2win_users"), where("referCode", "==", code)));
+        if(snap.empty) return alert("Invalid Referral Code!");
+
+        let referrerId = snap.docs[0].id;
+        let referrerData = snap.docs[0].data();
+        let referrerCoins = referrerData.walletCoins || 0;
+
+        currentCoins += 500; updateBalanceUI();
+        await updateDoc(doc(db, "ad2win_users", currentUserUID), { walletCoins: currentCoins, referredBy: code });
+        await addDoc(collection(db, "ad2win_history"), { userId: currentUserUID, amount: 500, type: "Refer Bonus (Coins)", date: new Date().toISOString() });
+        
+        await updateDoc(doc(db, "ad2win_users", referrerId), { walletCoins: referrerCoins + 1000 });
+        await addDoc(collection(db, "ad2win_history"), { userId: referrerId, amount: 1000, type: "Friend Joined (Coins)", date: new Date().toISOString() });
+
+        document.getElementById('referralInputArea').style.display = 'none';
+        document.getElementById('referralSuccessArea').style.display = 'block';
+        alert("🎉 Code Applied! 500 Coins added to your wallet.");
     };
 
     document.getElementById('btnSubmitWithdraw').onclick = async () => {
       const wAmt = parseFloat(document.getElementById('withdrawAmount').value);
-      if(currentRupees < 100 || wAmt < 100) return alert(`❌ Min withdraw is ₹100.`);
-      if(wAmt > currentRupees) return alert(`❌ Insufficient Balance!`);
+      if(currentRupees < 100 || wAmt < 100) return alert(`❌ Minimum withdraw is ₹100.`);
+      if(wAmt > currentRupees) return alert(`❌ Insufficient Main Balance!`);
       currentRupees -= wAmt; updateBalanceUI();
       await updateDoc(doc(db, "ad2win_users", currentUserUID), { walletRupees: currentRupees });
       await addDoc(collection(db, "ad2win_history"), { userId: currentUserUID, amount: wAmt, type: "Withdraw (₹)", date: new Date().toISOString() });
-      alert("✅ Request Sent!"); showSection('dashboardSection');
+      alert("✅ Withdrawal Request Sent successfully!"); showSection('dashboardSection');
     };
 
     document.getElementById('btnGoHistory').onclick = async () => {
@@ -413,7 +453,11 @@
       const snap = await getDocs(query(collection(db, "ad2win_history"), where("userId", "==", currentUserUID)));
       if(snap.empty) { hDiv.innerHTML = "No transactions yet."; return; }
       let hist = []; snap.forEach(d => hist.push(d.data())); hist.sort((a,b) => new Date(b.date) - new Date(a.date)); hDiv.innerHTML = "";
-      hist.forEach(data => hDiv.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 8px;"><strong>${data.type}</strong><br><small>${new Date(data.date).toLocaleDateString()}</small><div style="color:#4ade80; float:right;">${data.amount}</div></div>`);
+      hist.forEach(data => {
+          let isWin = data.type.includes("Withdraw") === false;
+          let symbol = data.type.includes("₹") ? "₹" : "🪙";
+          hDiv.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 8px; display:flex; justify-content: space-between;"><div><strong>${data.type}</strong><br><small style="color:#94a3b8;">${new Date(data.date).toLocaleDateString()}</small></div><div style="color: ${isWin?'#4ade80':'#f43f5e'}; font-weight: bold;">${isWin?'+':'-'}${symbol}${data.amount}</div></div>`;
+      });
     };
   </script>
 </body>
