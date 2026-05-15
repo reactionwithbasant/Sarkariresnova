@@ -14,18 +14,29 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      # YAHAN FIX HAI: Har baar same password (keystore) use hoga
+      - name: Cache Keystore
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: fixed-debug-keystore-v1
+
+      - name: Generate Fixed Keystore
+        run: |
+          mkdir -p ~/.android
+          if [ ! -f ~/.android/debug.keystore ]; then
+            keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=IN, O=Raghvita, CN=Ad2Win"
+          fi
+
       - name: Install Capacitor
         run: npm install -g @capacitor/cli
 
       - name: Setup Project
         run: |
-          # YAHAN FIX HAI: Sab kuch ek sath --force lagakar install kar rahe hain
           npm install @capacitor/core @capacitor/android @codetrix-studio/capacitor-google-auth --force
-          
           mkdir -p www
           cp index.html www/
           
-          # Capacitor Config with Google Auth Plugin
           cat <<EOF > capacitor.config.json
           {
             "appId": "com.raghvita.ad2win",
@@ -44,10 +55,8 @@ jobs:
           rm -rf android
           cap add android
           
-          # Android Strings required for Native Google Login
           echo '<?xml version="1.0" encoding="utf-8"?><resources><string name="server_client_id">849119353425-da1h69vsf869t9ltf6umifkfqtuvfjae.apps.googleusercontent.com</string></resources>' > android/app/src/main/res/values/custom_strings.xml
           
-          # Kotlin Version Clash Fix
           echo "configurations.all { resolutionStrategy { force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22' } }" >> android/app/build.gradle
           echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
           
@@ -58,9 +67,17 @@ jobs:
           chmod +x android/gradlew
           cd android && ./gradlew assembleDebug --no-daemon
 
+      # YAHAN AAPKA SECRET CODE (SHA-1) DIKHEGA
+      - name: 🚨 PRINT SHA-1 KEY FOR FIREBASE 🚨
+        run: |
+          echo "======================================================================"
+          echo "BASANT, NEECHE LIKHA SHA-1 COPY KAREIN AUR FIREBASE MEIN PASTE KAREIN:"
+          keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android | grep SHA1
+          echo "======================================================================"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Ad2Win-NativeLogin-APK
+          name: Ad2Win-Final-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
