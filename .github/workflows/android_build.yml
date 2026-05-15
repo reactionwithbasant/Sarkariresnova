@@ -17,7 +17,7 @@ jobs:
       - name: Install Capacitor
         run: npm install -g @capacitor/cli
 
-      - name: Setup Project & Sync
+      - name: Setup Project
         run: |
           npm install @capacitor/core @capacitor/android --force
           mkdir -p www
@@ -28,25 +28,21 @@ jobs:
           rm -rf android
           cap add android
           
-          # Stable Kotlin & Gradle Fix
-          sed -i 's/kotlin_version = .*/kotlin_version = "1.9.10"/' android/build.gradle
-          echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
+          # MAGIC FIX: Force Kotlin to use exactly 1.8.22 everywhere to stop the clash
+          echo "configurations.all { resolutionStrategy { force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22' } }" >> android/app/build.gradle
           
-          # Copy google-services.json if it exists in the root
-          if [ -f "google-services.json" ]; then
-            cp google-services.json android/app/
-          fi
+          echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
           
           cap sync android
 
-      - name: Build APK with Stacktrace
+      - name: Build Final APK
         run: |
           chmod +x android/gradlew
-          cd android && ./gradlew assembleDebug --stacktrace --no-daemon
-          
+          cd android && ./gradlew assembleDebug --no-daemon
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Ad2Win-Build
+          name: Ad2Win-Fixed-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
