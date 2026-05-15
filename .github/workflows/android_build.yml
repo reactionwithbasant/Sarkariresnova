@@ -59,12 +59,13 @@ jobs:
             cp google-services.json android/app/
           fi
           
-          # YAHAN FIX HAI: Ab hum original file delete nahi kar rahe, balki custom file bana rahe hain
+          # Custom Strings for AdMob and Google Login
           echo '<?xml version="1.0" encoding="utf-8"?><resources><string name="server_client_id">849119353425-66779v86p8r8idpuk5u6mhk42p55q20j.apps.googleusercontent.com</string><string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string></resources>' > android/app/src/main/res/values/custom_strings.xml
           
-          # AdMob ko Android ke dil (Manifest) mein jod rahe hain taaki crash na ho
-          sed -i '/<application/a \        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="@string/admob_app_id"/>' android/app/src/main/AndroidManifest.xml
+          # YAHAN FIX HAI: Ekdum safe tarika jisse XML file kabhi nahi tootegi
+          sed -i 's|</application>|<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="@string/admob_app_id"/></application>|' android/app/src/main/AndroidManifest.xml
           
+          # Gradle aur Kotlin fixes
           echo "configurations.all { resolutionStrategy { force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22' } }" >> android/app/build.gradle
           echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
           
