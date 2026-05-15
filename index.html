@@ -3,48 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';">
-  <title>Ad2Win | Premium Gaming & Earning</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *;">
+  <title>Ad2Win | RAGHVITA ENTERPRISES</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: #0f172a; color: #f8fafc; min-height: 100vh; overflow-x: hidden; padding-bottom: 80px; }
-    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
-    .logo { font-size: 24px; font-weight: 800; background: linear-gradient(to right, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; text-align: center; }
-    .btn { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s; text-align: center; }
-    .section { display: none; }
-    .active-section { display: block; }
-    /* Wallet Styles */
-    .wallet-container { display: flex; justify-content: space-between; margin-top: 10px; }
-    .coin-val { color: #fbbf24; font-size: 28px; font-weight: 800; }
-    .rupee-val { color: #4ade80; font-size: 28px; font-weight: 800; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+    body { background: #0f172a; color: white; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+    .glass-card { background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 85%; }
+    .btn { background: #3b82f6; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 18px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 20px; }
+    #dashboard { display: none; }
   </style>
 </head>
 <body>
-  <div class="navbar">
-    <div class="logo">Ad2Win</div>
-    <div>👤 <span id="userName">User</span></div>
+
+  <div id="loginSection" class="glass-card">
+    <h1 style="font-size: 40px;">🪙</h1>
+    <h2>Ad2Win</h2>
+    <p style="color: #94a3b8;">Powered by RAGHVITA ENTERPRISES</p>
+    <button class="btn" id="btnGoogleLogin">Login with Google</button>
   </div>
 
-  <div id="loginSection" class="section active-section">
-    <div class="glass-card" style="margin-top: 50px;">
-      <h1 style="font-size: 50px;">🪙</h1>
-      <h2>Welcome to Ad2Win</h2>
-      <button class="btn" id="btnGoogleLogin" style="background: white; color: black; margin-top: 30px;">Login with Google</button>
-    </div>
+  <div id="dashboard" class="glass-card">
+    <h2>Welcome, <span id="userName">User</span>!</h2>
+    <div style="margin-top: 20px; font-size: 24px;">Coins: <span id="txtCoins" style="color: #fbbf24;">0</span></div>
+    <button class="btn" onclick="location.reload()">Refresh</button>
   </div>
 
-  <div id="dashboardSection" class="section">
-    <div class="glass-card">
-      <div class="wallet-container">
-        <div><small>Coins</small><div class="coin-val" id="txtCoins">0</div></div>
-        <div><small>Balance</small><div class="rupee-val">₹<span id="txtRupees">0.00</span></div></div>
-      </div>
-      <button class="btn" id="btnGoWithdraw" style="margin-top: 20px;">Withdraw Now</button>
-    </div>
-  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-  <script type="module" src="main.js"></script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC5RgzMeAlQrbKbtcRvY7YgNKK59w2mT8s",
+      authDomain: "raghvitamart.firebaseapp.com",
+      projectId: "raghvitamart",
+      storageBucket: "raghvitamart.firebasestorage.app",
+      messagingSenderId: "849119353425",
+      appId: "1:849119353425:web:cc2114ea115235cc43f670"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Direct Click Handling
+    document.getElementById('btnGoogleLogin').onclick = async () => {
+        alert("Redirecting to Google... Please wait.");
+        try {
+            await signInWithRedirect(auth, provider);
+        } catch (error) {
+            alert("Error: " + error.message);
+        }
+    };
+
+    // Auth Change Detection
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('userName').innerText = user.displayName;
+      } else {
+        getRedirectResult(auth).catch((e) => {
+            if(e.code !== "auth/operation-not-supported-in-this-environment") {
+                alert("Login Failed: " + e.message);
+            }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
