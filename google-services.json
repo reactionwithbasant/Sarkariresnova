@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "849119353425-c9f0b8n41vognsalfgavh440614cn5ce.apps.googleusercontent.com",
+          "client_id": "849119353425-c11djsm3sv3pp46idnkvsju30ops9c3s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.raghvita.ad2win",
-            "certificate_hash": "634a0aa6998e5c63cb74775ddece74c4a3b92153"
+            "certificate_hash": "b9f14ae0514a4c15d085f8fd5f845ec1c3911afe"
           }
         },
         {
