@@ -19,10 +19,8 @@ jobs:
 
       - name: Setup Project
         run: |
-          npm install @capacitor/core @capacitor/android --force
-          
-          # YAHAN ASLI FIX HAI: Native Google Login Plugin
-          npm install @codetrix-studio/capacitor-google-auth
+          # YAHAN FIX HAI: Sab kuch ek sath --force lagakar install kar rahe hain
+          npm install @capacitor/core @capacitor/android @codetrix-studio/capacitor-google-auth --force
           
           mkdir -p www
           cp index.html www/
