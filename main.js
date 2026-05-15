@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 
-// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC5RgzMeAlQrbKbtcRvY7YgNKK59w2mT8s",
   authDomain: "raghvitamart.firebaseapp.com",
@@ -13,50 +12,56 @@ const firebaseConfig = {
   appId: "1:849119353425:web:cc2114ea115235cc43f670"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// Debugging: App start hote hi alert aayega
-alert("SYSTEM: Ad2Win Engine Started!");
+// IMPORTANT: Web Client ID configuration
+provider.setCustomParameters({
+  prompt: 'select_account'
+});
 
-// Sabse zaroori: Button event listener
 window.addEventListener('load', () => {
     const loginBtn = document.getElementById('btnGoogleLogin');
-    
     if (loginBtn) {
         loginBtn.onclick = async () => {
-            alert("ACTION: Google Login Triggered...");
+            console.log("Redirecting to Google...");
             try {
-                // Force Direct Redirect
                 await signInWithRedirect(auth, provider);
             } catch (err) {
-                alert("CRITICAL ERROR: " + err.message);
+                alert("Login Error: " + err.message);
             }
         };
-        console.log("Button linked successfully");
-    } else {
-        alert("ERROR: Login Button Not Found in HTML!");
     }
 });
 
-// Auth State Change
 onAuthStateChanged(auth, async (user) => {
   const loginSec = document.getElementById('loginSection');
   const dashSec = document.getElementById('dashboardSection');
 
   if (user) {
-    alert("WELCOME: " + user.displayName);
-    if(loginSec) loginSec.style.display = "none";
-    if(dashSec) dashSec.style.display = "block";
+    document.getElementById('userName').innerText = user.displayName ? user.displayName.split(" ")[0] : "User";
+    loginSec.style.display = "none";
+    dashSec.style.display = "block";
+    
+    // Auto sync user data
+    const userRef = doc(db, "ad2win_users", user.uid);
+    const docSnap = await getDoc(userRef);
+    if (!docSnap.exists()) {
+        await setDoc(userRef, { name: user.displayName, walletCoins: 0, walletRupees: 0.00 });
+    } else {
+        document.getElementById('txtCoins').innerText = docSnap.data().walletCoins || 0;
+        document.getElementById('txtRupees').innerText = (docSnap.data().walletRupees || 0).toFixed(2);
+    }
   } else {
-    // Check if coming back from redirect
     getRedirectResult(auth).catch((e) => {
         if(e.code !== "auth/operation-not-supported-in-this-environment") {
-            alert("AUTH FAIL: " + e.message);
+            alert("Auth Error: " + e.message);
         }
     });
+    loginSec.style.display = "block";
+    dashSec.style.display = "none";
   }
 });
+

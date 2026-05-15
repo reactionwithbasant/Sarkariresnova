@@ -11,35 +11,40 @@
     body { background: #0f172a; color: #f8fafc; min-height: 100vh; overflow-x: hidden; padding-bottom: 80px; }
     .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
     .logo { font-size: 24px; font-weight: 800; background: linear-gradient(to right, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; text-align: center; }
     .btn { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s; text-align: center; }
     .section { display: none; }
     .active-section { display: block; }
-    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; text-align: center; }
+    /* Wallet Styles */
+    .wallet-container { display: flex; justify-content: space-between; margin-top: 10px; }
+    .coin-val { color: #fbbf24; font-size: 28px; font-weight: 800; }
+    .rupee-val { color: #4ade80; font-size: 28px; font-weight: 800; }
   </style>
 </head>
 <body>
   <div class="navbar">
     <div class="logo">Ad2Win</div>
-    <div style="font-size: 14px; font-weight: bold;">👤 <span id="userName">User</span></div>
+    <div>👤 <span id="userName">User</span></div>
   </div>
 
   <div id="loginSection" class="section active-section">
     <div class="glass-card" style="margin-top: 50px;">
       <h1 style="font-size: 50px;">🪙</h1>
-      <h2>Play & Earn Daily</h2>
+      <h2>Welcome to Ad2Win</h2>
       <button class="btn" id="btnGoogleLogin" style="background: white; color: black; margin-top: 30px;">Login with Google</button>
     </div>
   </div>
 
   <div id="dashboardSection" class="section">
     <div class="glass-card">
-      <h3 id="txtCoins">0</h3>
-      <p>Coins</p>
+      <div class="wallet-container">
+        <div><small>Coins</small><div class="coin-val" id="txtCoins">0</div></div>
+        <div><small>Balance</small><div class="rupee-val">₹<span id="txtRupees">0.00</span></div></div>
+      </div>
+      <button class="btn" id="btnGoWithdraw" style="margin-top: 20px;">Withdraw Now</button>
     </div>
-    <button class="btn" id="btnGoWithdraw">Withdraw</button>
   </div>
 
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
-
