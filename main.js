@@ -18,7 +18,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// FIXED: Web Client ID added for Google Login in APK
+// Web Client ID configuration for stability
 provider.setCustomParameters({
   prompt: 'select_account'
 });
@@ -54,11 +54,11 @@ const GAMES = [
   { id: 'card', name: 'Card Draw', icon: '🃏', action: 'manual', desc: 'Draw a lucky card.' }
 ];
 
-// Login Handling with Redirect Result
+// Login Handling with Error Tracking
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUserUID = user.uid;
-    document.getElementById('userName').innerText = user.displayName.split(" ")[0];
+    document.getElementById('userName').innerText = user.displayName ? user.displayName.split(" ")[0] : "User";
     userReferCode = user.uid.substring(0, 6).toUpperCase(); 
     
     const userRef = doc(db, "ad2win_users", user.uid);
@@ -97,20 +97,27 @@ onAuthStateChanged(auth, async (user) => {
     startConversionTimer();
     updateBalanceUI(); generateTicker(); renderGames(); showSection('dashboardSection'); setupSafeAdMob();
   } else {
-    // Check if user is returning from a redirect
+    // Check for redirect result and alert if error occurs
     getRedirectResult(auth).catch((error) => {
-        console.error("Redirect Login Error:", error);
+        if(error.code !== "auth/operation-not-supported-in-this-environment") {
+            alert("Redirect Error: " + error.message);
+        }
     });
     showSection('loginSection');
   }
 });
 
-// Google Login Trigger (Redirect Method for APK Stability)
-document.getElementById('btnGoogleLogin').addEventListener('click', () => {
-    signInWithRedirect(auth, provider);
+// FIXED: Added try-catch and alert for debugging the login click
+document.getElementById('btnGoogleLogin').addEventListener('click', async () => {
+    try {
+        console.log("Attempting Google Login...");
+        await signInWithRedirect(auth, provider);
+    } catch (error) {
+        alert("Login Button Error: " + error.message + "\nCode: " + error.code);
+    }
 });
 
-// --- Baaki Ka Game Logic Same Rahega ---
+// --- Game Logic functions (No changes below this line) ---
 
 function generateTicker() {
   const names = ["Rohit", "Priya", "Amit", "Rahul", "Neha", "Vikas", "Sneha", "Karan", "Pooja", "Ravi", "Anjali"];
@@ -268,7 +275,6 @@ async function processReward() {
   showSection('dashboardSection');
 }
 
-// History & Navigation
 document.getElementById('btnGoHistory').addEventListener('click', async () => {
   showSection('historySection'); const hDiv = document.getElementById('historyList'); hDiv.innerHTML = "Loading...";
   const snap = await getDocs(query(collection(db, "ad2win_history"), where("userId", "==", currentUserUID)));
@@ -279,7 +285,6 @@ document.getElementById('btnGoHistory').addEventListener('click', async () => {
   });
 });
 
-// Refer & Withdraw (Simplified for brevity)
 document.getElementById('btnGoWithdraw').addEventListener('click', () => showSection('withdrawSection'));
 document.getElementById('btnGoRefer').addEventListener('click', () => showSection('referSection'));
 document.getElementById('btnLeaveGame').addEventListener('click', () => showSection('dashboardSection'));
