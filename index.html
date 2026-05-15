@@ -9,15 +9,11 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: #0f172a; color: #f8fafc; min-height: 100vh; overflow-x: hidden; padding-bottom: 80px; }
-    
     .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
     .logo { font-size: 24px; font-weight: 800; background: linear-gradient(to right, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
     .live-ticker { background: rgba(0, 0, 0, 0.8); color: #fbbf24; padding: 8px 0; font-size: 13px; font-weight: 600; border-bottom: 1px solid rgba(251, 191, 36, 0.2); display: flex; align-items: center; }
     .live-ticker span { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 10px; margin: 0 10px; font-size: 11px; }
-
     .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
-    
     .wallet-container { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
     .wallet-box { flex: 1; padding: 10px; }
     .wallet-box:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
@@ -25,32 +21,26 @@
     .coin-val { font-size: 32px; font-weight: 800; color: #fbbf24; }
     .rupee-val { font-size: 32px; font-weight: 800; color: #4ade80; }
     .timer-text { font-size: 10px; color: #38bdf8; margin-top: 5px; font-weight: bold; background: rgba(56, 189, 248, 0.1); padding: 3px 8px; border-radius: 8px; display: inline-block; }
-
     .btn { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s; }
     .btn:active { transform: scale(0.96); }
     .btn-danger { background: linear-gradient(135deg, #f43f5e, #e11d48); }
     .btn-dark { background: rgba(255,255,255,0.1); }
     .btn-gold { background: linear-gradient(135deg, #f59e0b, #d97706); display: none; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-    
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; }
     .game-item { background: linear-gradient(145deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8)); padding: 15px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
     .game-icon { font-size: 40px; margin-bottom: 5px; }
-    
     .game-board { margin: 20px 0; min-height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
     .slot-box { background: #1e293b; width: 60px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 35px; border: 2px solid #38bdf8; }
     .coin { width: 80px; height: 80px; transition: transform 2s; transform-style: preserve-3d; border-radius: 50%; background: gold; display: flex; align-items: center; justify-content: center; font-size: 35px; color: #b45309; }
     .spin-wheel { font-size: 80px; transition: transform 2s ease-out; }
     .dice-icon { font-size: 80px; }
-    
     .interactive-btn { background: #1e293b; border: 2px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; font-size: 30px; border-radius: 15px; cursor: pointer; margin: 5px; }
     .scratch-area { background: #475569; width: 200px; height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 20px; font-weight: bold; cursor: pointer; border: 2px dashed #94a3b8; }
-    
     .input-field { width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; outline: none; }
     .section { display: none; }
     .active-section { display: block; animation: fadeIn 0.3s ease-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
     #cooldownAlert { display: none; background: rgba(244, 63, 94, 0.1); color: #f43f5e; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-bottom: 15px; border: 1px solid rgba(244, 63, 94, 0.3); text-align: center; }
     .daily-limit { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: bold; margin: 10px 20px; text-align: center; }
   </style>
@@ -71,6 +61,7 @@
     <div class="glass-card" style="margin-top: 50px;">
       <h1 style="font-size: 50px;">🪙</h1>
       <h2>Play & Earn Daily</h2>
+      <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">Powered by RAGHVITA ENTERPRISES</p>
       <button class="btn" id="btnGoogleLogin" style="background: white; color: black; margin-top: 30px;">Login with Google</button>
     </div>
   </div>
@@ -94,13 +85,10 @@
         <button class="btn" id="btnGoRefer" style="margin-top: 0; background: #8b5cf6;">Refer & Earn</button>
       </div>
     </div>
-
     <div class="daily-limit">🎯 Today's Remaining Plays: <span id="txtRemainingPlays">40</span>/40</div>
     <div id="cooldownAlert" style="margin: 0 20px;">⏱️ Wait <span id="cooldownSeconds">60</span>s before playing again!</div>
-
     <h3 style="padding: 10px 20px; font-size: 16px;">Top 10 Games</h3>
     <div class="grid" id="gamesGrid"></div>
-    
     <div style="padding: 20px;">
         <button class="btn btn-dark" id="btnGoHistory" style="margin-bottom: 10px;">📜 Transaction History</button>
     </div>
@@ -159,8 +147,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    // CHANGED: Added setPersistence and browserLocalPersistence to prevent session dropping
-    import { getAuth, GoogleAuthProvider, signInWithPopup, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // CHANGED: Yahan signInWithCredential lagaya hai native login ko Firebase se jodne ke liye
+    import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -176,14 +164,12 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
     
     // Capacitor AdMob Setup
     let AdMob = null;
     if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
         AdMob = window.Capacitor.Plugins.AdMob;
-        AdMob.initialize().catch(e => console.log("AdMob Init Error: ", e));
+        AdMob.initialize().catch(e => console.log(e));
         AdMob.showBanner({ adId: 'ca-app-pub-3940256099942544/6300978111', adSize: 'BANNER', position: 'BOTTOM_CENTER', isTesting: true }).catch(e=>e);
     }
 
@@ -268,20 +254,33 @@
         }, 1000); 
     }
 
-    // --- AUTHENTICATION LOGIC ---
+    // --- NATIVE GOOGLE LOGIN LOGIC ---
     document.getElementById('btnGoogleLogin').onclick = async () => {
         const btn = document.getElementById('btnGoogleLogin');
         btn.innerText = "Opening Login...";
         try { 
-            // Setting persistence to explicitly prevent the missing state error
-            await setPersistence(auth, browserLocalPersistence);
-            // Calling Popup (Cordova InAppBrowser will handle this smoothly now)
-            await signInWithPopup(auth, provider); 
+            if (window.Capacitor && window.Capacitor.Plugins.GoogleAuth) {
+                // Initialize Native Google Auth
+                await window.Capacitor.Plugins.GoogleAuth.initialize({
+                  clientId: '849119353425-da1h69vsf869t9ltf6umifkfqtuvfjae.apps.googleusercontent.com',
+                  scopes: ['profile', 'email'],
+                  grantOfflineAccess: true,
+                });
+                
+                // Trigger Native Popup from the bottom of the screen (No Web Browser)
+                const googleUser = await window.Capacitor.Plugins.GoogleAuth.signIn();
+                
+                // Send Token to Firebase
+                const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+                await signInWithCredential(auth, credential);
+            } else {
+                alert("Native Google Login plugin not loaded.");
+                btn.innerText = "Login with Google"; 
+            }
         } 
         catch (err) { 
-            if (err.code !== "auth/popup-closed-by-user") {
-                alert("Login Error: " + err.message); 
-            }
+            console.log(err);
+            alert("Login Action Cancelled or Failed"); 
             btn.innerText = "Login with Google"; 
         }
     };
@@ -365,7 +364,6 @@
       let isWin = forceWin !== null ? forceWin : Math.random() > 0.6; 
       if(clickedEl) clickedEl.innerText = isWin ? "💎 Win" : "💨 Loss";
 
-      // Interstitial Ad
       if(AdMob) { try { await AdMob.prepareInterstitial({ adId: 'ca-app-pub-3940256099942544/1033173712', isTesting: true }); await AdMob.showInterstitial(); } catch(e){} }
 
       setTimeout(() => {
@@ -379,7 +377,6 @@
 
     document.getElementById('btnClaimReward').onclick = async () => {
       document.getElementById('btnClaimReward').disabled = true; 
-      // Rewarded Video Ad
       if(AdMob) { 
           try { 
               await AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true }); 

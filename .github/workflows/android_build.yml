@@ -21,21 +21,36 @@ jobs:
         run: |
           npm install @capacitor/core @capacitor/android --force
           
-          # MASTER FIX: Installing In-App Browser plugin so popups work perfectly inside the app
-          npm install cordova-plugin-inappbrowser
+          # YAHAN ASLI FIX HAI: Native Google Login Plugin
+          npm install @codetrix-studio/capacitor-google-auth
           
           mkdir -p www
           cp index.html www/
           
-          # Standard Config (Removed the hostname spoofing that caused the partition error)
-          echo '{"appId":"com.raghvita.ad2win","appName":"Ad2Win","webDir":"www"}' > capacitor.config.json
+          # Capacitor Config with Google Auth Plugin
+          cat <<EOF > capacitor.config.json
+          {
+            "appId": "com.raghvita.ad2win",
+            "appName": "Ad2Win",
+            "webDir": "www",
+            "plugins": {
+              "GoogleAuth": {
+                "scopes": ["profile", "email"],
+                "serverClientId": "849119353425-da1h69vsf869t9ltf6umifkfqtuvfjae.apps.googleusercontent.com",
+                "forceCodeForRefreshToken": true
+              }
+            }
+          }
+          EOF
           
           rm -rf android
           cap add android
           
-          # Kotlin resolution strategy to prevent build clash
-          echo "configurations.all { resolutionStrategy { force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22' } }" >> android/app/build.gradle
+          # Android Strings required for Native Google Login
+          echo '<?xml version="1.0" encoding="utf-8"?><resources><string name="server_client_id">849119353425-da1h69vsf869t9ltf6umifkfqtuvfjae.apps.googleusercontent.com</string></resources>' > android/app/src/main/res/values/custom_strings.xml
           
+          # Kotlin Version Clash Fix
+          echo "configurations.all { resolutionStrategy { force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22', 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22' } }" >> android/app/build.gradle
           echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
           
           cap sync android
@@ -48,6 +63,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Ad2Win-Perfect-APK
+          name: Ad2Win-NativeLogin-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
