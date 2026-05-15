@@ -3,71 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';">
   <title>Ad2Win | Premium Gaming & Earning</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: #0f172a; color: #f8fafc; min-height: 100vh; overflow-x: hidden; padding-bottom: 80px; }
-    
     .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
     .logo { font-size: 24px; font-weight: 800; background: linear-gradient(to right, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    .live-ticker { background: rgba(0, 0, 0, 0.8); color: #fbbf24; padding: 8px 0; font-size: 13px; font-weight: 600; border-bottom: 1px solid rgba(251, 191, 36, 0.2); display: flex; align-items: center; }
-    .live-ticker span { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 10px; margin: 0 10px; font-size: 11px; }
-
-    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
-    
-    /* Dual Wallet Styles */
-    .wallet-container { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-    .wallet-box { flex: 1; padding: 10px; }
-    .wallet-box:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
-    .wallet-title { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
-    .coin-val { font-size: 32px; font-weight: 800; color: #fbbf24; }
-    .rupee-val { font-size: 32px; font-weight: 800; color: #4ade80; }
-    .timer-text { font-size: 10px; color: #38bdf8; margin-top: 5px; font-weight: bold; background: rgba(56, 189, 248, 0.1); padding: 3px 8px; border-radius: 8px; display: inline-block; }
-
-    .btn { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s; }
-    .btn:active { transform: scale(0.96); }
-    .btn-danger { background: linear-gradient(135deg, #f43f5e, #e11d48); }
-    .btn-dark { background: rgba(255,255,255,0.1); }
-    .btn-gold { background: linear-gradient(135deg, #f59e0b, #d97706); display: none; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-    
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; }
-    .game-item { background: linear-gradient(145deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8)); padding: 15px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
-    .game-icon { font-size: 40px; margin-bottom: 5px; }
-    
-    .game-board { margin: 20px 0; min-height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .slot-box { background: #1e293b; width: 60px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 35px; border: 2px solid #38bdf8; }
-    .coin { width: 80px; height: 80px; transition: transform 2s; transform-style: preserve-3d; border-radius: 50%; background: gold; display: flex; align-items: center; justify-content: center; font-size: 35px; color: #b45309; }
-    .spin-wheel { font-size: 80px; transition: transform 2s ease-out; }
-    .dice-icon { font-size: 80px; }
-    
-    .interactive-btn { background: #1e293b; border: 2px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; font-size: 30px; border-radius: 15px; cursor: pointer; }
-    .scratch-area { background: #475569; width: 200px; height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 20px; font-weight: bold; cursor: pointer; border: 2px dashed #94a3b8; }
-    
-    .input-field { width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; outline: none; }
+    .btn { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s; text-align: center; }
     .section { display: none; }
-    .active-section { display: block; animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    #cooldownAlert { display: none; background: rgba(244, 63, 94, 0.1); color: #f43f5e; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-bottom: 15px; border: 1px solid rgba(244, 63, 94, 0.3); text-align: center; }
-    .daily-limit { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: bold; margin: 10px 20px; text-align: center; }
+    .active-section { display: block; }
+    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; margin: 15px 20px; border-radius: 20px; text-align: center; }
   </style>
 </head>
 <body>
-
-  <div class="live-ticker">
-    <span>LIVE</span>
-    <marquee id="tickerText" scrollamount="5" behavior="scroll" direction="left">Loading withdrawals...</marquee>
-  </div>
-
   <div class="navbar">
     <div class="logo">Ad2Win</div>
     <div style="font-size: 14px; font-weight: bold;">👤 <span id="userName">User</span></div>
   </div>
 
-  <!-- Login Section -->
   <div id="loginSection" class="section active-section">
     <div class="glass-card" style="margin-top: 50px;">
       <h1 style="font-size: 50px;">🪙</h1>
@@ -76,103 +31,15 @@
     </div>
   </div>
 
-  <!-- Dashboard Section -->
   <div id="dashboardSection" class="section">
-    <div class="glass-card" style="margin-top: 10px; padding: 15px;">
-      
-      <!-- Dual Wallet Area -->
-      <div class="wallet-container">
-        <!-- Coins Wallet -->
-        <div class="wallet-box">
-          <div class="wallet-title">Coins Wallet</div>
-          <div class="coin-val">🪙 <span id="txtCoins">0</span></div>
-          <div class="timer-text" id="txtConvertTimer">Calculating...</div>
-        </div>
-        <!-- Main Balance -->
-        <div class="wallet-box">
-          <div class="wallet-title">Main Balance</div>
-          <div class="rupee-val">₹ <span id="txtRupees">0.00</span></div>
-          <div style="font-size: 10px; color: #4ade80; margin-top: 5px;">Min Withdraw ₹100</div>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 10px; margin-top: 15px;">
-        <button class="btn btn-danger" id="btnGoWithdraw" style="margin-top: 0;">Withdraw</button>
-        <button class="btn" id="btnGoRefer" style="margin-top: 0; background: #8b5cf6;">Refer & Earn</button>
-      </div>
-    </div>
-
-    <div class="daily-limit">🎯 Today's Remaining Plays: <span id="txtRemainingPlays">40</span>/40</div>
-    <div id="cooldownAlert" style="margin: 0 20px;">⏱️ Wait <span id="cooldownSeconds">60</span>s before playing again!</div>
-
-    <h3 style="padding: 10px 20px; font-size: 16px;">Top 10 Games</h3>
-    <div class="grid" id="gamesGrid"></div>
-    
-    <div style="padding: 20px;">
-        <button class="btn btn-dark" id="btnGoHistory" style="margin-bottom: 10px;">📜 Transaction History</button>
-        <button class="btn btn-dark" onclick="window.location.href='mailto:raghvitaenterprises@gmail.com'" style="background: rgba(255,255,255,0.05); color: #38bdf8; border: 1px solid #38bdf8;">📧 Contact Support</button>
-    </div>
-  </div>
-
-  <!-- Game Play Area -->
-  <div id="gamePlaySection" class="section">
-    <div id="activeGameContainer" class="glass-card" style="margin-top: 40px;">
-      <h2 id="gameTitle">Game Name</h2>
-      <p id="gameInstruction" style="font-size:12px; color:#94a3b8; margin-top:5px;"></p>
-      
-      <div id="dynamicGameBoard" class="game-board"></div>
-
-      <h3 id="gameResultText" style="margin: 15px 0; min-height: 25px; font-size: 18px;"></h3>
-      
-      <button class="btn" id="btnStartGameAction">▶ Play Now</button>
-      <button class="btn btn-gold" id="btnClaimReward">📺 Watch Ad to Claim</button>
-      <button class="btn btn-dark" id="btnLeaveGame" style="margin-top: 15px;">Back to Menu</button>
-    </div>
-  </div>
-
-  <!-- Refer Section -->
-  <div id="referSection" class="section">
-    <div class="glass-card" style="margin-top: 20px;">
-      <h1 style="font-size: 50px;">🎁</h1>
-      <h2>Refer & Earn</h2>
-      <p style="color: #94a3b8; font-size: 13px; margin: 10px 0;">Get ₹10 (1000 Coins) per friend, they get ₹5 (500 Coins)!</p>
-      <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; margin: 20px 0;">
-        <span style="font-size: 12px; color: #94a3b8;">Your Code:</span>
-        <h3 id="myReferCode" style="color: #38bdf8; letter-spacing: 2px; font-size: 24px;">LOADING</h3>
-      </div>
-      <button class="btn" id="btnShareRefer" style="background: #22c55e;">🚀 Share Link</button>
-      <hr style="border: 1px solid rgba(255,255,255,0.05); margin: 20px 0;">
-      <div id="referralInputArea">
-        <input type="text" id="inputReferCode" class="input-field" placeholder="Enter Friend's Code">
-        <button class="btn" id="btnApplyRefer">Apply Code</button>
-      </div>
-      <div id="referralSuccessArea" style="display:none; color:#4ade80; padding:15px;">✅ Referral Applied!</div>
-      <button class="btn btn-dark" id="btnBackFromRefer" style="margin-top: 20px;">Back</button>
-    </div>
-  </div>
-
-  <!-- Withdraw Section -->
-  <div id="withdrawSection" class="section">
     <div class="glass-card">
-      <h2>Withdraw Main Balance</h2>
-      <p style="color: #f43f5e; font-size: 12px; margin-bottom: 10px;">Withdrawal is made in Rupees (₹). Min ₹100 required.</p>
-      <input type="text" id="upiId" class="input-field" placeholder="Enter UPI ID">
-      <input type="number" id="withdrawAmount" class="input-field" placeholder="Amount (₹)">
-      <button class="btn btn-danger" id="btnSubmitWithdraw">Request Payout</button>
-      <button class="btn btn-dark" id="btnBackToDash2">Back</button>
+      <h3 id="txtCoins">0</h3>
+      <p>Coins</p>
     </div>
+    <button class="btn" id="btnGoWithdraw">Withdraw</button>
   </div>
 
-  <!-- History Section -->
-  <div id="historySection" class="section">
-    <div class="glass-card" style="padding: 15px;">
-      <h2>History</h2>
-      <div id="historyList" style="margin-top: 20px; font-size: 13px; text-align: left; max-height: 350px; overflow-y: auto;"></div>
-      <button class="btn btn-dark" id="btnBackToDash3" style="margin-top: 20px;">Back</button>
-    </div>
-  </div>
-
-  <script type="module" src="/main.js"></script>
+  <script type="module" src="./main.js"></script>
 </body>
 </html>
 
